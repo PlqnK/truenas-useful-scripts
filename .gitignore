@@ -1,0 +1,9 @@
+# Global
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Project specific
+user.conf
