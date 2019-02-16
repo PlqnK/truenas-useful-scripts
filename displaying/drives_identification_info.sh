@@ -2,7 +2,7 @@
 #
 # Diplay a table containing useful drive identification information.
 
-readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"c
+readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
 source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
 
 echo "+========+============================================+=================+"

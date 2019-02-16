@@ -2,7 +2,7 @@
 #
 # Send a UPS status summary via Email.
 
-readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"c
+readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
 source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) UPS status report"
