@@ -2,7 +2,8 @@
 #
 # Send a SMART status summary and detailed report of all SATA drives via Email.
 
-source ../user.conf && source ../global.conf
+readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"c
+source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) SMART status report"
 readonly EMAIL_CONTENT="/tmp/smart_report.eml"

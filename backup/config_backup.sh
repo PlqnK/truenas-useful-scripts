@@ -2,7 +2,8 @@
 #
 # Send a FreeNAS config backup via Email and also store it somewhere in a data pool.
 
-source ../user.conf && source ../global.conf
+readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"c
+source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) config backup"
 readonly EMAIL_CONTENT="/tmp/config_backup_error.eml"

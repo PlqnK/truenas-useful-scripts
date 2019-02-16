@@ -2,7 +2,8 @@
 #
 # Diplay a table containing useful drive identification information.
 
-source ../user.conf && source ../global.conf
+readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"c
+source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
 
 echo "+========+============================================+=================+"
 echo "| Device | GPTID                                      | Serial          |"
