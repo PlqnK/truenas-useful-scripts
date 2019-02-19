@@ -16,7 +16,9 @@ if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; the
   # doesn't support the "-a" argument to attach files in MIME format.
   uuencode "${TAR_FILE}" "${BACKUP_FILE_NAME}".tar.gz | mail -s "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}"
   # Also store it somewhere that will be backed up by another service.
-  cp "${TAR_FILE}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
+  if [[ "${BACKUP_FILE_PATH}" != "" ]]; then
+    cp "${TAR_FILE}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
+  fi
   rm /tmp/"${BACKUP_FILE_NAME}".db
   rm /tmp/"${BACKUP_FILE_NAME}".db.sha256
   rm "${TAR_FILE}"
