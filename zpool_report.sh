@@ -30,6 +30,7 @@ echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
 for pool_name in ${ZFS_POOLS}; do
   pool_health="$(zpool list -H -o health "${pool_name}")"
   pool_status="$(zpool status "${pool_name}")"
+  pool_used_capacity="$(zpool list -H -p -o capacity "${pool_name}")"
   pool_errors="$(echo "${pool_status}" | grep -E "(ONLINE|DEGRADED|FAULTED|UNAVAIL|REMOVED)[ \t]+[0-9]+")"
 
   # Count the number of read errors in the pool by counting the numbers in the READ column of the zpool status output.
@@ -72,7 +73,6 @@ for pool_name in ${ZFS_POOLS}; do
     checksum_errors=">1K"
   fi
 
-  used_capacity="$(zpool list -H -p -o capacity "${pool_name}")"
   scrub_repaired_bytes="N/A"
   scrub_errors="N/A"
   scrub_age="N/A"
@@ -87,14 +87,14 @@ for pool_name in ${ZFS_POOLS}; do
 
   # Choose the symbol to display beside the pool name.
   if [[ "${pool_health}" == "FAULTED" ]] ||
-    [[ "${used_capacity}" -ge "${ZFS_POOL_CAPACITY_CRITICAL}" ]] ||
+    [[ "${pool_used_capacity}" -ge "${ZFS_POOL_CAPACITY_CRITICAL}" ]] ||
     { [[ "${scrub_errors}" != "N/A" ]] && [[ "${scrub_errors}" != "0" ]]; }; then
     ui_symbol="${UI_CRITICAL_SYMBOL}"
   elif [[ "${pool_health}" != "ONLINE" ]] ||
     [[ "${read_errors}" != "0" ]] ||
     [[ "${write_errors}" != "0" ]] ||
     [[ "${checksum_errors}" != "0" ]] ||
-    [[ "${used_capacity}" -ge "${ZFS_POOL_CAPACITY_WARNING}" ]] ||
+    [[ "${pool_used_capacity}" -ge "${ZFS_POOL_CAPACITY_WARNING}" ]] ||
     [[ "${scrub_repaired_bytes}" != "0" ]] ||
     [[ "$(echo "${scrub_age}" | awk '{print int($1)}')" -ge "${SCRUB_AGE_WARNING}" ]]; then
     ui_symbol="${UI_WARNING_SYMBOL}"
@@ -104,7 +104,7 @@ for pool_name in ${ZFS_POOLS}; do
 
   # Print the row with all the attributes corresponding to the pool.
   printf "|%-12s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
-    "${read_errors}" "${write_errors}" "${checksum_errors}" "${used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
+    "${read_errors}" "${write_errors}" "${checksum_errors}" "${pool_used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
     "${scrub_age}" >> "${EMAIL_CONTENT}"
 done
 echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_CONTENT}"
