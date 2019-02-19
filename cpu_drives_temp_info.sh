@@ -4,7 +4,6 @@
 
 source user.conf && source global.conf
 
-# Store the sysctl status report into a variable in order to limit the number of calls to it and speed up the process
 sysctl_status="$(sysctl -a)"
 for core_number in $(seq 0 "${CPU_CORE_AMOUNT}"); do
   cpu_temperature="$(echo "${sysctl_status}" | grep "cpu.${core_number}.temp" | cut -c24-25 | tr -d "\n")"

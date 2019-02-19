@@ -28,13 +28,11 @@ echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
   echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+"
 ) >>"${EMAIL_CONTENT}"
 for drive_label in ${HARD_DISK_DRIVES}; do
-  # Store the SMART status report into a variable in order to limit the number of use of smartctl and also asking
-  # smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors
-  # and total number of seeks afterwards
+  # Ask smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors and
+  # total number of seeks afterwards
   drive_status="$(smartctl -A -i -v 7,hex48 /dev/"${drive_label}")"
   drive_tests_list="$(smartctl -l selftest /dev/"${drive_label}")"
 
-  # Grab all the values we need from the SMART status report
   last_test_hours="$(echo "${drive_tests_list}" | grep "# 1" | awk '{print $9}')"
   serial_number="$(echo "${drive_status}" | grep "Serial Number:" | awk '{print $3}')"
   temperature="$(echo "${drive_status}" | grep "Temperature_Celsius" | awk '{print $10}')"
@@ -54,7 +52,7 @@ for drive_label in ${HARD_DISK_DRIVES}; do
 
   # Force LC_NUMERIC because on certain non en_US systems the decimal separator is a comma and we need a dot
   # printf "%.0f" in order to round the resulting number
-  # Bash doesn't support float numbers so bc is used to have a float result to a division
+  # Bash doesn't "natively" support float numbers so bc is used to have a float result to a division
   test_age="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; (${power_on_hours} - ${last_test_hours}) / 24")")"
 
   # Choose the symbol to display beside the drive name
@@ -99,7 +97,6 @@ echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+--
 
 # Print a detailed SMART report for each drive
 for drive_label in ${HARD_DISK_DRIVES}; do
-  # Store the SMART infos into a variable in order to limit the number of calls to smartctl
   drive_smart_info="$(smartctl -i /dev/"${drive_label}")"
   brand="$(echo "${drive_smart_info}" | grep "Model Family" | awk '{print $3, $4, $5}')"
   serial_number="$(echo "${drive_smart_info}" | grep "Serial Number" | awk '{print $3}')"
@@ -128,6 +125,5 @@ sed -i '' -e '/SMART Error Log Version/d' "${EMAIL_CONTENT}"
   echo "</pre>"
 ) >>"${EMAIL_CONTENT}"
 
-# Send report via Email
 sendmail -t <"${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"

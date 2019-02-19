@@ -28,7 +28,6 @@ echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
   echo "+--------------+--------+------+------+------+----+--------+------+-----+"
 ) >>"${EMAIL_CONTENT}"
 for pool_name in ${ZFS_POOLS}; do
-  # Store the zpool status reports into variables in order to limit the number of use of zpool status & zpool list
   pool_health="$(zpool list -H -o health "${pool_name}")"
   pool_status="$(zpool status "${pool_name}")"
   pool_errors="$(echo "${pool_status}" | grep -E "(ONLINE|DEGRADED|FAULTED|UNAVAIL|REMOVED)[ \t]+[0-9]+")"
@@ -73,7 +72,6 @@ for pool_name in ${ZFS_POOLS}; do
     checksum_errors=">1K"
   fi
 
-  # Grab all the values we need from the zpool status report
   used_capacity="$(zpool list -H -p -o capacity "${pool_name}")"
   scrub_repaired_bytes="N/A"
   scrub_errors="N/A"
@@ -127,6 +125,5 @@ done
   echo "</pre>"
 ) >>"${EMAIL_CONTENT}"
 
-# Send report via Email
 sendmail -t <"${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"
