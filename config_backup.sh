@@ -10,15 +10,15 @@ readonly TAR_FILE="/tmp/config_backup.tar.gz"
 
 if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; then # Send via Email/Store config backup
   cp /data/freenas-v1.db /tmp/"${BACKUP_FILE_NAME}".db
-  sha256 /tmp/"${BACKUP_FILE_NAME}".db > /tmp/config_backup.sha256
-  tar -czf "${TAR_FILE}" -C /tmp/ "${BACKUP_FILE_NAME}".db -C /tmp/ config_backup.md5 -C /tmp/ config_backup.sha256
+  sha256 /tmp/"${BACKUP_FILE_NAME}".db > /tmp/"${BACKUP_FILE_NAME}".db.sha256
+  tar -czf "${TAR_FILE}" -C /tmp/ "${BACKUP_FILE_NAME}".db -C /tmp/ "${BACKUP_FILE_NAME}".db.sha256
   # Add the backup config file inline because the mail utility of FreeNAS (as of version 11.1) is an old version that
   # doesn't support the "-a" argument to attach files in MIME format
   uuencode "${TAR_FILE}" "${BACKUP_FILE_NAME}".tar.gz | mail -s "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}"
   # Also store it somewhere that will be backed up by another service
   cp "${TAR_FILE}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
   rm /tmp/"${BACKUP_FILE_NAME}".db
-  rm /tmp/config_backup.sha256
+  rm /tmp/"${BACKUP_FILE_NAME}".db.sha256
   rm "${TAR_FILE}"
 else # Send error message via Email
   (
