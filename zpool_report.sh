@@ -2,8 +2,7 @@
 #
 # Send a zpool status summary and detailed report of all pools via Email.
 
-readonly REPOSITORY_ROOT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
-source "${REPOSITORY_ROOT_DIRECTORY}"/user.conf && source "${REPOSITORY_ROOT_DIRECTORY}"/global.conf
+source user.conf && source global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) zpool status report"
 readonly EMAIL_CONTENT="/tmp/zpool_report.eml"

@@ -2,8 +2,7 @@
 #
 # Display the temperature of both the CPU cores and the SATA drives.
 
-readonly REPOSITORY_ROOT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
-source "${REPOSITORY_ROOT_DIRECTORY}"/user.conf && source "${REPOSITORY_ROOT_DIRECTORY}"/global.conf
+source user.conf && source global.conf
 
 # Store the sysctl status report into a variable in order to limit the number of calls to it and speed up the process
 sysctl_status="$(sysctl -a)"

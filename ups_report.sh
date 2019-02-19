@@ -2,8 +2,7 @@
 #
 # Send a UPS status summary via Email.
 
-readonly REPOSITORY_ROOT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
-source "${REPOSITORY_ROOT_DIRECTORY}"/user.conf && source "${REPOSITORY_ROOT_DIRECTORY}"/global.conf
+source user.conf && source global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) UPS status report"
 readonly EMAIL_CONTENT="/tmp/ups_report.eml"
