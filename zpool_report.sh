@@ -13,7 +13,7 @@ readonly EMAIL_CONTENT="/tmp/zpool_report.eml"
   echo "Subject: ${EMAIL_SUBJECT}"
   echo "Content-Type: text/html"
   echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822
-) >"${EMAIL_CONTENT}"
+) > "${EMAIL_CONTENT}"
 
 # Only specify monospace font to let Email client decide of the rest
 echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
@@ -26,7 +26,7 @@ echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
   echo "|              |        |Errors|Errors|Errors|    |Repaired|Errors|Scrub|"
   echo "|              |        |      |      |      |    |Bytes   |      |Age  |"
   echo "+--------------+--------+------+------+------+----+--------+------+-----+"
-) >>"${EMAIL_CONTENT}"
+) >> "${EMAIL_CONTENT}"
 for pool_name in ${ZFS_POOLS}; do
   pool_health="$(zpool list -H -o health "${pool_name}")"
   pool_status="$(zpool status "${pool_name}")"
@@ -107,7 +107,7 @@ for pool_name in ${ZFS_POOLS}; do
     "${read_errors}" "${write_errors}" "${checksum_errors}" "${used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
     "${scrub_age}" >>"${EMAIL_CONTENT}"
 done
-echo "+--------------+--------+------+------+------+----+--------+------+-----+" >>"${EMAIL_CONTENT}"
+echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_CONTENT}"
 
 # Print a detailed status report for each pool
 for pool_name in ${ZFS_POOLS}; do
@@ -116,14 +116,14 @@ for pool_name in ${ZFS_POOLS}; do
     echo ""
     echo "<b>ZPool status report for ${pool_name}:</b>"
     zpool status -v "${pool_name}"
-  ) >>"${EMAIL_CONTENT}"
+  ) >> "${EMAIL_CONTENT}"
 done
 
 (
   echo ""
   echo "-- End of ZPool status report --"
   echo "</pre>"
-) >>"${EMAIL_CONTENT}"
+) >> "${EMAIL_CONTENT}"
 
-sendmail -t <"${EMAIL_CONTENT}"
+sendmail -t < "${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"

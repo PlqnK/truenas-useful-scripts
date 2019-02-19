@@ -33,7 +33,7 @@ else # Send error message via Email
     echo ""
     echo "-- End of failed config backup report --"
     echo "</pre>"
-  ) >>"${EMAIL_CONTENT}"
-  sendmail -t <"${EMAIL_CONTENT}"
+  ) >> "${EMAIL_CONTENT}"
+  sendmail -t < "${EMAIL_CONTENT}"
   rm "${EMAIL_CONTENT}"
 fi

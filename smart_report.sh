@@ -13,7 +13,7 @@ readonly EMAIL_CONTENT="/tmp/smart_report.eml"
   echo "Subject: ${EMAIL_SUBJECT}"
   echo "Content-Type: text/html"
   echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822
-) >"${EMAIL_CONTENT}"
+) > "${EMAIL_CONTENT}"
 
 # Only specify monospace font to let Email client decide of the rest
 echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
@@ -26,7 +26,7 @@ echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
   echo "|      |               |    |On   |Stop |Retry|Sectors|Pending|Uncorrec|CRC   |Errors|Fly   |Timeout|Test|"
   echo "|      |               |    |Hours|Count|Count|       |Sectors|Sectors |Errors|      |Writes|Count  |Age |"
   echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+"
-) >>"${EMAIL_CONTENT}"
+) >> "${EMAIL_CONTENT}"
 for drive_label in ${HARD_DISK_DRIVES}; do
   # Ask smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors and
   # total number of seeks afterwards
@@ -93,7 +93,7 @@ for drive_label in ${HARD_DISK_DRIVES}; do
     "${realocated_sectors}" "${pending_sectors_count}" "${uncorrectable_sectors_count}" "${udma_crc_errors_count}" \
     "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >>"${EMAIL_CONTENT}"
 done
-echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >>"${EMAIL_CONTENT}"
+echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >> "${EMAIL_CONTENT}"
 
 # Print a detailed SMART report for each drive
 for drive_label in ${HARD_DISK_DRIVES}; do
@@ -108,7 +108,7 @@ for drive_label in ${HARD_DISK_DRIVES}; do
     smartctl -H -A -l error /dev/"${drive_label}"
     # Display the status of the last selftest
     smartctl -l selftest /dev/"${drive_label}" | grep "# 1 \|Num" | cut -c6-
-  ) >>"${EMAIL_CONTENT}"
+  ) >> "${EMAIL_CONTENT}"
 done
 
 # Trimming unnecessary information from SMART detailed reports
@@ -123,7 +123,7 @@ sed -i '' -e '/SMART Error Log Version/d' "${EMAIL_CONTENT}"
   echo ""
   echo "-- End of SMART status report --"
   echo "</pre>"
-) >>"${EMAIL_CONTENT}"
+) >> "${EMAIL_CONTENT}"
 
-sendmail -t <"${EMAIL_CONTENT}"
+sendmail -t < "${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"
