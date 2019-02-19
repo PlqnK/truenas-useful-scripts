@@ -2,8 +2,8 @@
 #
 # Send a SMART status summary and detailed report of all SATA drives via Email.
 
-readonly repoParentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
-source "${repoParentDirectory}"/user.conf && source "${repoParentDirectory}"/global.conf
+readonly REPOSITORY_ROOT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && cd .. && pwd)"
+source "${REPOSITORY_ROOT_DIRECTORY}"/user.conf && source "${REPOSITORY_ROOT_DIRECTORY}"/global.conf
 
 readonly EMAIL_SUBJECT="$(hostname) SMART status report"
 readonly EMAIL_CONTENT="/tmp/smart_report.eml"
@@ -28,90 +28,90 @@ echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
   echo "|      |               |    |Hours|Count|Count|       |Sectors|Sectors |Errors|      |Writes|Count  |Age |"
   echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+"
 ) >>"${EMAIL_CONTENT}"
-for driveLabel in ${HARD_DISK_DRIVES}; do
+for drive_label in ${HARD_DISK_DRIVES}; do
   # Store the SMART status report into a variable in order to limit the number of use of smartctl and also asking
   # smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors
   # and total number of seeks afterwards
-  driveStatus="$(smartctl -A -i -v 7,hex48 /dev/"${driveLabel}")"
-  driveTestList="$(smartctl -l selftest /dev/"${driveLabel}")"
+  drive_status="$(smartctl -A -i -v 7,hex48 /dev/"${drive_label}")"
+  drive_tests_list="$(smartctl -l selftest /dev/"${drive_label}")"
 
   # Grab all the values we need from the SMART status report
-  lastTestHours="$(echo "${driveTestList}" | grep "# 1" | awk '{print $9}')"
-  serialNumber="$(echo "${driveStatus}" | grep "Serial Number:" | awk '{print $3}')"
-  temperature="$(echo "${driveStatus}" | grep "Temperature_Celsius" | awk '{print $10}')"
-  powerOnHours="$(echo "${driveStatus}" | grep "Power_On_Hours" | awk '{print $10}')"
-  startStopCount="$(echo "${driveStatus}" | grep "Start_Stop_Count" | awk '{print $10}')"
-  spinRetryCount="$(echo "${driveStatus}" | grep "Spin_Retry_Count" | awk '{print $10}')"
-  realocatedSectors="$(echo "${driveStatus}" | grep "Reallocated_Sector" | awk '{print $10}')"
-  pendingSectorsCount="$(echo "${driveStatus}" | grep "Current_Pending_Sector" | awk '{print $10}')"
-  uncorrectableSectorsCount="$(echo "${driveStatus}" | grep "Offline_Uncorrectable" | awk '{print $10}')"
-  udmaCrcErrorsCount="$(echo "${driveStatus}" | grep "UDMA_CRC_Error_Count" | awk '{print $10}')"
+  last_test_hours="$(echo "${drive_tests_list}" | grep "# 1" | awk '{print $9}')"
+  serial_number="$(echo "${drive_status}" | grep "Serial Number:" | awk '{print $3}')"
+  temperature="$(echo "${drive_status}" | grep "Temperature_Celsius" | awk '{print $10}')"
+  power_on_hours="$(echo "${drive_status}" | grep "Power_On_Hours" | awk '{print $10}')"
+  start_stop_count="$(echo "${drive_status}" | grep "Start_Stop_Count" | awk '{print $10}')"
+  spin_retry_count="$(echo "${drive_status}" | grep "Spin_Retry_Count" | awk '{print $10}')"
+  realocated_sectors="$(echo "${drive_status}" | grep "Reallocated_Sector" | awk '{print $10}')"
+  pending_sectors_count="$(echo "${drive_status}" | grep "Current_Pending_Sector" | awk '{print $10}')"
+  uncorrectable_sectors_count="$(echo "${drive_status}" | grep "Offline_Uncorrectable" | awk '{print $10}')"
+  udma_crc_errors_count="$(echo "${drive_status}" | grep "UDMA_CRC_Error_Count" | awk '{print $10}')"
   # Using cut to grab the first 4 hex symbols which indicate the actual number of seek errors
-  seekErrors="$(echo "${driveStatus}" | grep "Seek_Error_Rate" | awk '{print $10}' | cut -c 1-6)"
+  seek_errors="$(echo "${drive_status}" | grep "Seek_Error_Rate" | awk '{print $10}' | cut -c 1-6)"
   # Using cut to grab the last 8 hex symbols which indicate the total number of seeks
-  totalSeeks="$(echo "${driveStatus}" | grep "Seek_Error_Rate" | awk '{print $10}' | cut -c 1-2,7-14)"
-  highFlyWrites="$(echo "${driveStatus}" | grep "High_Fly_Writes" | awk '{print $10}')"
-  commandTimeout="$(echo "${driveStatus}" | grep "Command_Timeout" | awk '{print $10}')"
+  total_seeks="$(echo "${drive_status}" | grep "Seek_Error_Rate" | awk '{print $10}' | cut -c 1-2,7-14)"
+  high_fly_writes="$(echo "${drive_status}" | grep "High_Fly_Writes" | awk '{print $10}')"
+  command_timeout="$(echo "${drive_status}" | grep "Command_Timeout" | awk '{print $10}')"
 
   # Force LC_NUMERIC because on certain non en_US systems the decimal separator is a comma and we need a dot
   # printf "%.0f" in order to round the resulting number
   # Bash doesn't support float numbers so bc is used to have a float result to a division
-  testAge="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; ("${powerOnHours}" - "${lastTestHours}") / 24")")"
+  test_age="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; ("${power_on_hours}" - "${last_test_hours}") / 24")")"
 
   # Choose the symbol to display beside the drive name
   if [ "${temperature}" -ge "${DRIVE_TEMPERATURE_CRITICAL}" ] ||
-    [ "${realocatedSectors}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
-    [ "${pendingSectorsCount}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
-    [ "${uncorrectableSectorsCount}" -gt "${DRIVE_SECTORS_CRITICAL}" ]; then
-    uiSymbol="${UI_CRITICAL_SYMBOL}"
+    [ "${realocated_sectors}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
+    [ "${pending_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
+    [ "${uncorrectable_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ]; then
+    ui_symbol="${UI_CRITICAL_SYMBOL}"
   elif [ "${temperature}" -ge "${DRIVE_TEMPERATURE_WARNING}" ] ||
-    [ "${realocatedSectors}" -gt "0" ] ||
-    [ "${pendingSectorsCount}" -gt "0" ] ||
-    [ "${uncorrectableSectorsCount}" -gt "0" ] ||
-    [ "${testAge}" -ge "${SMART_TEST_AGE_WARNING}" ]; then
-    uiSymbol="${UI_WARNING_SYMBOL}"
+    [ "${realocated_sectors}" -gt "0" ] ||
+    [ "${pending_sectors_count}" -gt "0" ] ||
+    [ "${uncorrectable_sectors_count}" -gt "0" ] ||
+    [ "${test_age}" -ge "${SMART_TEST_AGE_WARNING}" ]; then
+    ui_symbol="${UI_WARNING_SYMBOL}"
   else
-    uiSymbol=" "
+    ui_symbol=" "
   fi
 
-  # seekErrors and totalSeeks are stored as hex values, we need to convert them before comparing and displaying
-  seekErrors="$(printf "%d" "${seekErrors}")"
-  totalSeeks="$(printf "%d" "${totalSeeks}")"
+  # seek_errors and total_seeks are stored as hex values, we need to convert them before comparing and displaying
+  seek_errors="$(printf "%d" "${seek_errors}")"
+  total_seeks="$(printf "%d" "${total_seeks}")"
   # If there's no seeks at all it means the parameter is not supported by the drive SMART so display "N/A"
-  if [ "${totalSeeks}" = "0" ]; then
-    seekErrors="N/A"
-    totalSeeks="N/A"
+  if [ "${total_seeks}" = "0" ]; then
+    seek_errors="N/A"
+    total_seeks="N/A"
   fi
   # Same for those two parameters
-  if [ "${highFlyWrites}" = "" ]; then
-    highFlyWrites="N/A"
+  if [ "${high_fly_writes}" = "" ]; then
+    high_fly_writes="N/A"
   fi
-  if [ "${commandTimeout}" = "" ]; then
-    commandTimeout="N/A"
+  if [ "${command_timeout}" = "" ]; then
+    command_timeout="N/A"
   fi
 
   # Print the row with all the attributes corresponding to the drive
-  printf "|%-4s %1s|%-15s| %s |%5s|%5s|%5s|%7s|%7s|%8s|%6s|%6s|%6s|%7s|%4s|\n" "${driveLabel}" "${uiSymbol}" \
-    "${serialNumber}" "${temperature}" "${powerOnHours}" "${startStopCount}" "${spinRetryCount}" \
-    "${realocatedSectors}" "${pendingSectorsCount}" "${uncorrectableSectorsCount}" "${udmaCrcErrorsCount}" \
-    "${seekErrors}" "${highFlyWrites}" "${commandTimeout}" "${testAge}" >>"${EMAIL_CONTENT}"
+  printf "|%-4s %1s|%-15s| %s |%5s|%5s|%5s|%7s|%7s|%8s|%6s|%6s|%6s|%7s|%4s|\n" "${drive_label}" "${ui_symbol}" \
+    "${serial_number}" "${temperature}" "${power_on_hours}" "${start_stop_count}" "${spin_retry_count}" \
+    "${realocated_sectors}" "${pending_sectors_count}" "${uncorrectable_sectors_count}" "${udma_crc_errors_count}" \
+    "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >>"${EMAIL_CONTENT}"
 done
 echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >>"${EMAIL_CONTENT}"
 
 # Print a detailed SMART report for each drive
-for driveLabel in ${HARD_DISK_DRIVES}; do
+for drive_label in ${HARD_DISK_DRIVES}; do
   # Store the SMART infos into a variable in order to limit the number of calls to smartctl
-  driveInfos="$(smartctl -i /dev/"${driveLabel}")"
-  brand="$(echo "${driveInfos}" | grep "Model Family" | awk '{print $3, $4, $5}')"
-  serialNumber="$(echo "${driveInfos}" | grep "Serial Number" | awk '{print $3}')"
+  drive_smart_info="$(smartctl -i /dev/"${drive_label}")"
+  brand="$(echo "${drive_smart_info}" | grep "Model Family" | awk '{print $3, $4, $5}')"
+  serial_number="$(echo "${drive_smart_info}" | grep "Serial Number" | awk '{print $3}')"
   (
     echo ""
     echo ""
-    echo "<b>SMART status report for ${driveLabel} drive (${brand}: ${serialNumber}):</b>"
+    echo "<b>SMART status report for ${drive_label} drive (${brand}: ${serial_number}):</b>"
     # Dislpay the SMART status table
-    smartctl -H -A -l error /dev/"${driveLabel}"
+    smartctl -H -A -l error /dev/"${drive_label}"
     # Display the status of the last selftest
-    smartctl -l selftest /dev/"${driveLabel}" | grep "# 1 \|Num" | cut -c6-
+    smartctl -l selftest /dev/"${drive_label}" | grep "# 1 \|Num" | cut -c6-
   ) >>"${EMAIL_CONTENT}"
 done
 
