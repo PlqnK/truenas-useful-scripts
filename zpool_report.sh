@@ -76,7 +76,7 @@ for pool_name in ${ZFS_POOLS}; do
   scrub_repaired_bytes="N/A"
   scrub_errors="N/A"
   scrub_age="N/A"
-  if [[ "$(echo "${pool_status}" | grep "scan" | awk '{print $2}')" = "scrub" ]]; then
+  if [[ "$(echo "${pool_status}" | grep "scan" | awk '{print $2}')" == "scrub" ]]; then
     scrub_repaired_bytes="$(echo "${pool_status}" | grep "scan" | awk '{print $4}')"
     scrub_errors="$(echo "${pool_status}" | grep "scan" | awk '{print $10}')"
     scrub_date="$(echo "${pool_status}" | grep "scan" | awk '{print $17"-"$14"-"$15"_"$16}')"
@@ -86,7 +86,7 @@ for pool_name in ${ZFS_POOLS}; do
   fi
 
   # Choose the symbol to display beside the pool name
-  if [[ "${pool_health}" = "FAULTED" ]] ||
+  if [[ "${pool_health}" == "FAULTED" ]] ||
     [[ "${used_capacity}" -ge "${ZFS_POOL_CAPACITY_CRITICAL}" ]] ||
     { [[ "${scrub_errors}" != "N/A" ]] && [[ "${scrub_errors}" != "0" ]]; }; then
     ui_symbol="${UI_CRITICAL_SYMBOL}"

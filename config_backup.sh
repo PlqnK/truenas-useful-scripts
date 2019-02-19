@@ -8,7 +8,7 @@ readonly EMAIL_SUBJECT="$(hostname) config backup"
 readonly EMAIL_CONTENT="/tmp/config_backup_error.eml"
 readonly TAR_FILE="/tmp/config_backup.tar.gz"
 
-if [ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]; then # Send via Email/Store config backup
+if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; then # Send via Email/Store config backup
   cp /data/freenas-v1.db /tmp/"${BACKUP_FILE_NAME}".db
   sha256 /tmp/"${BACKUP_FILE_NAME}".db > /tmp/config_backup.sha256
   tar -czf "${TAR_FILE}" -C /tmp/ "${BACKUP_FILE_NAME}".db -C /tmp/ config_backup.md5 -C /tmp/ config_backup.sha256

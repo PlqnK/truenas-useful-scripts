@@ -16,7 +16,7 @@ for drive_label in ${SATA_DRIVES}; do
   serial_number="$(smartctl -i /dev/"${drive_label}" | grep "Serial Number" | awk '{print $3}')"
   drive_temperature="$(smartctl -A /dev/"${drive_label}" | grep "Temperature_Celsius" | awk '{print $10}')"
   # Some drives don't report their temperature in their SMART
-  if [ "${drive_temperature}" = "" ]; then
+  if [[ "${drive_temperature}" == "" ]]; then
     printf "%s %-15s: N/A\n" "${drive_label}" "${serial_number}"
   else
     printf "%s %-15s: %s°C\n" "${drive_label}" "${serial_number}" "${drive_temperature}"

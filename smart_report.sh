@@ -56,16 +56,16 @@ for drive_label in ${HARD_DISK_DRIVES}; do
   test_age="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; (${power_on_hours} - ${last_test_hours}) / 24")")"
 
   # Choose the symbol to display beside the drive name
-  if [ "${temperature}" -ge "${DRIVE_TEMPERATURE_CRITICAL}" ] ||
-    [ "${realocated_sectors}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
-    [ "${pending_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ] ||
-    [ "${uncorrectable_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ]; then
+  if [[ "${temperature}" -ge "${DRIVE_TEMPERATURE_CRITICAL}" ]] ||
+    [[ "${realocated_sectors}" -gt "${DRIVE_SECTORS_CRITICAL}" ]] ||
+    [[ "${pending_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ]] ||
+    [[ "${uncorrectable_sectors_count}" -gt "${DRIVE_SECTORS_CRITICAL}" ]]; then
     ui_symbol="${UI_CRITICAL_SYMBOL}"
-  elif [ "${temperature}" -ge "${DRIVE_TEMPERATURE_WARNING}" ] ||
-    [ "${realocated_sectors}" -gt "0" ] ||
-    [ "${pending_sectors_count}" -gt "0" ] ||
-    [ "${uncorrectable_sectors_count}" -gt "0" ] ||
-    [ "${test_age}" -ge "${SMART_TEST_AGE_WARNING}" ]; then
+  elif [[ "${temperature}" -ge "${DRIVE_TEMPERATURE_WARNING}" ]] ||
+    [[ "${realocated_sectors}" -gt "0" ]] ||
+    [[ "${pending_sectors_count}" -gt "0" ]] ||
+    [[ "${uncorrectable_sectors_count}" -gt "0" ]] ||
+    [[ "${test_age}" -ge "${SMART_TEST_AGE_WARNING}" ]]; then
     ui_symbol="${UI_WARNING_SYMBOL}"
   else
     ui_symbol=" "
@@ -75,15 +75,15 @@ for drive_label in ${HARD_DISK_DRIVES}; do
   seek_errors="$(printf "%d" "${seek_errors}")"
   total_seeks="$(printf "%d" "${total_seeks}")"
   # If there's no seeks at all it means the parameter is not supported by the drive SMART so display "N/A"
-  if [ "${total_seeks}" = "0" ]; then
+  if [[ "${total_seeks}" == "0" ]]; then
     seek_errors="N/A"
     total_seeks="N/A"
   fi
   # Same for those two parameters
-  if [ "${high_fly_writes}" = "" ]; then
+  if [[ "${high_fly_writes}" == "" ]]; then
     high_fly_writes="N/A"
   fi
-  if [ "${command_timeout}" = "" ]; then
+  if [[ "${command_timeout}" == "" ]]; then
     command_timeout="N/A"
   fi
 
