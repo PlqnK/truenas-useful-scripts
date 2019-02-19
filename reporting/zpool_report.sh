@@ -32,7 +32,7 @@ for pool_name in ${ZFS_POOLS}; do
   # Store the zpool status reports into variables in order to limit the number of use of zpool status & zpool list
   pool_health="$(zpool list -H -o health "${pool_name}")"
   pool_status="$(zpool status "${pool_name}")"
-  pool_errors="$(echo "${pool_status}" | egrep "(ONLINE|DEGRADED|FAULTED|UNAVAIL|REMOVED)[ \t]+[0-9]+")"
+  pool_errors="$(echo "${pool_status}" | grep -E "(ONLINE|DEGRADED|FAULTED|UNAVAIL|REMOVED)[ \t]+[0-9]+")"
 
   # Count the number of read errors in the pool by counting the numbers in the READ column of the zpool status output
   read_errors=0
@@ -41,7 +41,7 @@ for pool_name in ${ZFS_POOLS}; do
     # there's a K in the column that means there's more than 1000 errors and we don't need to check any further because
     # if a pool gets to this point then knowing if there's 10K or 1K errors doesn't mean much and also because I'm lazy
     # and I don't want to write the code for it.
-    if echo "${error}" | egrep -q "[^0-9]+"; then
+    if echo "${error}" | grep -Eq "[^0-9]+"; then
       read_errors=1000
       break
     fi
@@ -53,7 +53,7 @@ for pool_name in ${ZFS_POOLS}; do
   # Do the same for the write and checksum errors
   write_errors=0
   for error in $(echo "${pool_errors}" | awk '{print $4}'); do
-    if echo "${error}" | egrep -q "[^0-9]+"; then
+    if echo "${error}" | grep -Eq "[^0-9]+"; then
       write_errors=1000
       break
     fi
@@ -64,7 +64,7 @@ for pool_name in ${ZFS_POOLS}; do
   fi
   checksum_errors=0
   for error in $(echo "${pool_errors}" | awk '{print $5}'); do
-    if echo "${error}" | egrep -q "[^0-9]+"; then
+    if echo "${error}" | grep -Eq "[^0-9]+"; then
       checksum_errors=1000
       break
     fi
