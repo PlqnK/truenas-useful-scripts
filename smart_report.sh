@@ -16,7 +16,7 @@ readonly EMAIL_CONTENT="/tmp/smart_report.eml"
 ) > "${EMAIL_CONTENT}"
 
 # Only specify monospace font to let Email client decide of the rest
-echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
+echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
 
 # Print a summary table of the status of all drives
 (
@@ -91,7 +91,7 @@ for drive_label in ${HARD_DISK_DRIVES}; do
   printf "|%-4s %1s|%-15s| %s |%5s|%5s|%5s|%7s|%7s|%8s|%6s|%6s|%6s|%7s|%4s|\n" "${drive_label}" "${ui_symbol}" \
     "${serial_number}" "${temperature}" "${power_on_hours}" "${start_stop_count}" "${spin_retry_count}" \
     "${realocated_sectors}" "${pending_sectors_count}" "${uncorrectable_sectors_count}" "${udma_crc_errors_count}" \
-    "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >>"${EMAIL_CONTENT}"
+    "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >> "${EMAIL_CONTENT}"
 done
 echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >> "${EMAIL_CONTENT}"
 

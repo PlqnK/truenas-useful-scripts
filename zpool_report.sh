@@ -16,7 +16,7 @@ readonly EMAIL_CONTENT="/tmp/zpool_report.eml"
 ) > "${EMAIL_CONTENT}"
 
 # Only specify monospace font to let Email client decide of the rest
-echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
+echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
 
 # Print a summary table of the status of all pools
 (
@@ -105,7 +105,7 @@ for pool_name in ${ZFS_POOLS}; do
   # Print the row with all the attributes corresponding to the pool
   printf "|%-12s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
     "${read_errors}" "${write_errors}" "${checksum_errors}" "${used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
-    "${scrub_age}" >>"${EMAIL_CONTENT}"
+    "${scrub_age}" >> "${EMAIL_CONTENT}"
 done
 echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_CONTENT}"
 

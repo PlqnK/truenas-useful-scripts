@@ -27,7 +27,7 @@ else # Send error message via Email
     echo "Content-Type: text/html"
     echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822
     # Only specify monospace font to let Email client decide of the rest
-    echo "<pre style=\"font-family:monospace\">" >>"${EMAIL_CONTENT}"
+    echo "<pre style=\"font-family:monospace\">"
     echo "<b>/!\ Automatic backup of FreeNAS config failed:</b>"
     echo "The config file is corrupted, you should correct this problem as soon as possible."
     echo ""
