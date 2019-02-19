@@ -56,7 +56,7 @@ for drive_label in ${HARD_DISK_DRIVES}; do
   # Force LC_NUMERIC because on certain non en_US systems the decimal separator is a comma and we need a dot
   # printf "%.0f" in order to round the resulting number
   # Bash doesn't support float numbers so bc is used to have a float result to a division
-  test_age="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; ("${power_on_hours}" - "${last_test_hours}") / 24")")"
+  test_age="$(LC_NUMERIC="en_US.UTF-8" printf "%.0f\n" "$(bc <<<"scale=6; (${power_on_hours} - ${last_test_hours}) / 24")")"
 
   # Choose the symbol to display beside the drive name
   if [ "${temperature}" -ge "${DRIVE_TEMPERATURE_CRITICAL}" ] ||

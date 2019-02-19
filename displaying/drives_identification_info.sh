@@ -11,7 +11,7 @@ echo "+========+============================================+=================+"
 
 for drive_label in ${SATA_DRIVES}; do
   gptid="$(glabel status -s "${drive_label}p2" | awk '{print $1}')"
-  serial_number="$(smartctl -i /dev/${drive_label} | grep "Serial Number" | awk '{print $3}')"
+  serial_number="$(smartctl -i /dev/"${drive_label}" | grep "Serial Number" | awk '{print $3}')"
   printf "| %-6s | %-42s | %-15s |\n" "${drive_label}" "${gptid}" "${serial_number}"
   echo "+--------+--------------------------------------------+-----------------+"
 done
