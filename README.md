@@ -11,6 +11,7 @@ This is a collection of useful scripts for FreeNAS admins that want to have more
 ## Roadmap
 
 - Change how SMART and zpool reports are displayed in order to use native HTML tables.
+- Take some ideas from [Spearfoot FreeNAS scripts](https://github.com/Spearfoot/FreeNAS-scripts), in particular the encryption (but using PGP instead of a symetric algorithm like AES256) and sending of a correctly MIME-formated config backup as an email attachment.
 
 ## Prerequisites
 
