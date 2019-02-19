@@ -91,7 +91,7 @@ for pool_name in ${ZFS_POOLS}; do
   # Choose the symbol to display beside the pool name
   if [[ "${pool_health}" = "FAULTED" ]] ||
     [[ "${used_capacity}" -ge "${ZFS_POOL_CAPACITY_CRITICAL}" ]] ||
-    ([[ "${scrub_errors}" != "N/A" ]] && [[ "${scrub_errors}" != "0" ]]); then
+    { [[ "${scrub_errors}" != "N/A" ]] && [[ "${scrub_errors}" != "0" ]]; }; then
     ui_symbol="${UI_CRITICAL_SYMBOL}"
   elif [[ "${pool_health}" != "ONLINE" ]] ||
     [[ "${read_errors}" != "0" ]] ||
