@@ -12,13 +12,13 @@ readonly EMAIL_CONTENT="/tmp/zpool_report.eml"
   echo "To: ${EMAIL_ADDRESS}"
   echo "Subject: ${EMAIL_SUBJECT}"
   echo "Content-Type: text/html"
-  echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822
+  echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822.
 ) > "${EMAIL_CONTENT}"
 
-# Only specify monospace font to let Email client decide of the rest
+# Only specify monospace font to let Email client decide of the rest.
 echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
 
-# Print a summary table of the status of all pools
+# Print a summary table of the status of all pools.
 (
   echo "<b>ZPool status report summary for all pools:</b>"
   echo "+--------------+--------+------+------+------+----+--------+------+-----+"
@@ -32,7 +32,7 @@ for pool_name in ${ZFS_POOLS}; do
   pool_status="$(zpool status "${pool_name}")"
   pool_errors="$(echo "${pool_status}" | grep -E "(ONLINE|DEGRADED|FAULTED|UNAVAIL|REMOVED)[ \t]+[0-9]+")"
 
-  # Count the number of read errors in the pool by counting the numbers in the READ column of the zpool status output
+  # Count the number of read errors in the pool by counting the numbers in the READ column of the zpool status output.
   read_errors=0
   for error in $(echo "${pool_errors}" | awk '{print $3}'); do
     # Check if only numbers are displayed in the read errors column, zpool status will abbrieviate 1000 with 1K so if
@@ -48,7 +48,7 @@ for pool_name in ${ZFS_POOLS}; do
   if [[ "${read_errors}" -ge 1000 ]]; then
     read_errors=">1K"
   fi
-  # Do the same for the write and checksum errors
+  # Do the same for the write and checksum errors.
   write_errors=0
   for error in $(echo "${pool_errors}" | awk '{print $4}'); do
     if echo "${error}" | grep -Eq "[^0-9]+"; then
@@ -85,7 +85,7 @@ for pool_name in ${ZFS_POOLS}; do
     scrub_age=$((((current_timestamp - scrub_timestamp) + 43200) / 86400))
   fi
 
-  # Choose the symbol to display beside the pool name
+  # Choose the symbol to display beside the pool name.
   if [[ "${pool_health}" == "FAULTED" ]] ||
     [[ "${used_capacity}" -ge "${ZFS_POOL_CAPACITY_CRITICAL}" ]] ||
     { [[ "${scrub_errors}" != "N/A" ]] && [[ "${scrub_errors}" != "0" ]]; }; then
@@ -102,14 +102,14 @@ for pool_name in ${ZFS_POOLS}; do
     ui_symbol=" "
   fi
 
-  # Print the row with all the attributes corresponding to the pool
+  # Print the row with all the attributes corresponding to the pool.
   printf "|%-12s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
     "${read_errors}" "${write_errors}" "${checksum_errors}" "${used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
     "${scrub_age}" >> "${EMAIL_CONTENT}"
 done
 echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_CONTENT}"
 
-# Print a detailed status report for each pool
+# Print a detailed status report for each pool.
 for pool_name in ${ZFS_POOLS}; do
   (
     echo ""
