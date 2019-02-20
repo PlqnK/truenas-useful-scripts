@@ -39,6 +39,8 @@ Finally you will need to create cron jobs in the FreeNAS WebUI in order to execu
 
 Contributions in the form of issues or PR are welcome if you see any area of improvement or if you have new ideas for useful scripts!
 
+This project is following [Google Shell style guidelines](https://google.github.io/styleguide/shell.xml) and [translate-shell AWK style guidelines](https://github.com/soimort/translate-shell/wiki/AWK-Style-Guide) but I prefer to keep AWK usage to a minimum, only when there's no really usable bash alternative.
+
 ## License
 
 This project is released under the [BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause). A copy of the license is available in this project folder.
