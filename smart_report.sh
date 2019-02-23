@@ -35,7 +35,10 @@ for drive_label in ${HARD_DISK_DRIVES}; do
 
   last_test_hours="$(echo "${drive_tests_list}" | grep "# 1" | awk '{print $9}')"
   serial_number="$(echo "${drive_status}" | grep "Serial Number:" | awk '{print $3}')"
-  temperature="$(echo "${drive_status}" | grep "Temperature_Celsius" | awk '{print $10}')"
+  temperature="$(echo "${drive_status}" | grep "Temperature_Celsius" | awk '{print $10}')" # SATA HDD
+  if [[ -z "${temperature}" ]]; then
+    temperature="$(echo "${drive_status}" | grep "Airflow_Temperature_Cel" | awk '{print $10}')" # SATA SSD
+  fi
   power_on_hours="$(echo "${drive_status}" | grep "Power_On_Hours" | awk '{print $10}')"
   start_stop_count="$(echo "${drive_status}" | grep "Start_Stop_Count" | awk '{print $10}')"
   spin_retry_count="$(echo "${drive_status}" | grep "Spin_Retry_Count" | awk '{print $10}')"
