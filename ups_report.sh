@@ -44,13 +44,31 @@ for ups in ${UPS_LIST}; do
   battery_charge="$(upsc "${ups}" battery.charge)"
 
   (
-    echo "UPS: ${manufacturer} ${model}"
-    echo "Serial: ${serial_number}"
+    echo "UPS: ${manufacturer} ${model} (Serial #: ${serial_number} / FW: ${firmware_version})"
     echo "Status: ${status}"
+
+    echo "Input Voltage: ${input_voltage}V"
+    echo "Input Frequency: ${input_frequency}Hz"
+
     echo "Output Load: ${output_load}%"
     echo "Output Voltage: ${output_voltage}V"
+    echo "Output Voltage (nominal): ${output_volatage_nominal}V"
+    echo "Output Apparent Power: ${power}VA"
+    echo "Output Apparent Power (nominal): ${power_nominal}VA"
+    echo "Output Real Power: ${real_power}W"
+    echo "Output Real Power (nominal): ${real_power_nominal}W"
+    echo "Output Frequency: ${output_frequency}Hz"
+    echo "Output Frequency (nominal): ${output_frequency_nominal}Hz"
+
+    echo "Battery Type: ${battery_type}"
     echo "Battery Runtime: ${battery_runtime}s"
     echo "Battery Charge: ${battery_charge}%"
+
+    echo "Beeper Status: ${beeper_status}"
+    echo "Shutdown Timer: ${timer_shutdown}s"
+    echo "Start Timer: ${timer_start}s"
+    echo "Shutdown Delay: ${delay_shutdown}s"
+    echo "Start Delay: ${delay_start}s"
   ) >> "${EMAIL_CONTENT}"
 done
 
