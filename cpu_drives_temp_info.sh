@@ -4,10 +4,14 @@
 
 source user.conf && source global.conf
 
-sysctl_status="$(sysctl -a)"
 for core_number in $(seq 0 "${CPU_CORE_AMOUNT}"); do
-  cpu_temperature="$(echo "${sysctl_status}" | grep "cpu.${core_number}.temp" | cut -c24-25 | tr -d "\n")"
-  printf "Core %s: %s°C\n" "${core_number}" "${cpu_temperature}"
+  cpu_temperature="$(sysctl -n dev.cpu."${core_number}".temperature | sed 's/\..*$//g')"
+  if [[ "${cpu_temperature}" -lt 0 ]]; then
+    cpu_temperature="N/A"
+  else
+    cpu_temperature="${cpu_temperature}°C"
+  fi
+  printf "Core %s: %s\n" "${core_number}" "${cpu_temperature}"
 done
 
 echo ""
