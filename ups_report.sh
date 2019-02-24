@@ -16,7 +16,7 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 ) > "${EMAIL_CONTENT}"
 
 for ups in ${UPS_LIST}; do
-  model="$(upsc "${ups}" device.model)"
+  model="$(upsc "${ups}" device.model | sed -e 's/[[:space:]]*$//')"
   manufacturer="$(upsc "${ups}" device.mfr)"
   serial_number="$(upsc "${ups}" device.serial)"
   uptime="$(upsc "${ups}" device.uptime)"
@@ -60,11 +60,7 @@ for ups in ${UPS_LIST}; do
   battery_type="$(upsc "${ups}" battery.type)"
 
   (
-    echo "<b>UPS status report for ${ups}:</b>"
-    echo "UPS: ${manufacturer} ${model}"
-    if [[ -n "${serial_number}" ]]; then
-      echo "Serial: ${serial_number}"
-    fi
+    echo "<b>UPS status report for ${ups} UPS (${manufacturer} ${model}: ${serial_number}):</b>"
     if [[ -n "${firmware_version}" ]]; then
       echo "Firmware version: ${firmware_version}"
     fi
