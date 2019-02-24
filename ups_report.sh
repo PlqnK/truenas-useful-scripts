@@ -23,6 +23,7 @@ for ups in ${UPS_LIST}; do
   serial_number="$(upsc "${ups}" device.serial)"
   firmware_version="$(upsc "${ups}" ups.firmware)"
   status="$(upsc "${ups}" ups.status)"
+  load="$(upsc "${ups}" ups.load)"
   beeper_status="$(upsc "${ups}" ups.beeper.status)"
   timer_shutdown="$(upsc "${ups}" ups.timer.shutdown)"
   timer_start="$(upsc "${ups}" ups.timer.start)"
@@ -34,7 +35,6 @@ for ups in ${UPS_LIST}; do
   real_power_nominal="$(upsc "${ups}" ups.realpower.nominal)"
   output_frequency="$(upsc "${ups}" output.frequency)"
   output_frequency_nominal="$(upsc "${ups}" output.frequency.nominal)"
-  output_load="$(upsc "${ups}" ups.load)"
   output_voltage="$(upsc "${ups}" output.voltage)"
   output_volatage_nominal="$(upsc "${ups}" output.voltage.nominal)"
   input_frequency="$(upsc "${ups}" input.frequency)"
@@ -46,11 +46,11 @@ for ups in ${UPS_LIST}; do
   (
     echo "UPS: ${manufacturer} ${model} (Serial #: ${serial_number} / FW: ${firmware_version})"
     echo "Status: ${status}"
+    echo "Load: ${load}%"
 
     echo "Input Voltage: ${input_voltage}V"
     echo "Input Frequency: ${input_frequency}Hz"
 
-    echo "Output Load: ${output_load}%"
     echo "Output Voltage: ${output_voltage}V"
     echo "Output Voltage (nominal): ${output_volatage_nominal}V"
     echo "Output Apparent Power: ${power}VA"
