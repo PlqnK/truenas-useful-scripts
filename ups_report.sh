@@ -114,7 +114,7 @@ for ups in ${UPS_LIST}; do
       echo "Last Self-Test Date: ${last_test_date}"
     fi
 
-    echo -e "\n<i>Status</i>"
+    echo ""
     if [[ -n "${uptime}" ]]; then
       echo "Uptime: ${uptime} s"
     fi
@@ -129,7 +129,7 @@ for ups in ${UPS_LIST}; do
       echo "Efficiency: ${efficiency} %"
     fi
 
-    echo -e "\n<i>Input</i>"
+    echo ""
     if [[ -n "${input_voltage}" ]]; then
       echo "Input Voltage: ${input_voltage} V"
     fi
@@ -146,7 +146,7 @@ for ups in ${UPS_LIST}; do
       echo "Input Real Power: ${input_real_power} W"
     fi
 
-    echo -e "\n<i>Output</i>"
+    echo ""
     if [[ -n "${output_voltage}" ]]; then
       echo "Output Voltage: ${output_voltage} V"
     fi
@@ -178,7 +178,7 @@ for ups in ${UPS_LIST}; do
       echo "Output Real Power (nominal): ${real_power_nominal} W"
     fi
 
-    echo -e "\n<i>Battery</i>"
+    echo ""
     if [[ -n "${battery_charge}" ]]; then
       echo "Battery Charge: ${battery_charge} %"
     fi
@@ -204,7 +204,7 @@ for ups in ${UPS_LIST}; do
       echo "Battery Type: ${battery_type}"
     fi
 
-    echo -e "\n<i>UPS Configuration</i>"
+    echo ""
     if [[ -n "${beeper_status}" ]]; then
       echo "Beeper Status: ${beeper_status}"
     fi
