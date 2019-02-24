@@ -80,7 +80,7 @@ for ups in ${UPS_LIST}; do
     "${battery_charge}" "${battery_voltage}" "${battery_temperature}" "${battery_runtime}" "${battery_change_date}" \
     "${last_test_date}" >> "${EMAIL_CONTENT}"
 done
-echo "+--------------+------+----+------+-------+-------+-------+-------+----------+----------+" >> "${EMAIL_CONTENT}"
+echo "+--------------+------+-----+------+-------+-------+-------+-------+----------+----------+" >> "${EMAIL_CONTENT}"
 
 # Print a detailed UPS report for each UPS.
 for ups in ${UPS_LIST}; do
