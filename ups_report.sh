@@ -18,9 +18,9 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 ) > "${EMAIL_CONTENT}"
 
 for ups in ${UPS_LIST}; do
-  manufacturer="$(upsc "${ups}" ups.mfr)"
-  model="$(upsc "${ups}" ups.model)"
-  serial_number="$(upsc "${ups}" ups.serial)"
+  manufacturer="$(upsc "${ups}" device.mfr)"
+  model="$(upsc "${ups}" device.model)"
+  serial_number="$(upsc "${ups}" device.serial)"
   firmware_version="$(upsc "${ups}" ups.firmware)"
   status="$(upsc "${ups}" ups.status)"
   beeper_status="$(upsc "${ups}" ups.beeper.status)"
