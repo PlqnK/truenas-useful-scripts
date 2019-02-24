@@ -79,8 +79,11 @@ for ups in ${UPS_LIST}; do
   output_frequency="$(upsc "${ups}" output.frequency)"
   output_frequency_nominal="$(upsc "${ups}" output.frequency.nominal)"
   input_voltage="$(upsc "${ups}" input.voltage)"
+  input_voltage_nominal="$(upsc "${ups}" input.voltage.nominal)"
   input_current="$(upsc "${ups}" input.current)"
+  input_current_nominal="$(upsc "${ups}" input.current.nominal)"
   input_frequency="$(upsc "${ups}" input.frequency)"
+  input_frequency_nominal="$(upsc "${ups}" input.frequency.nominal)"
   input_power="$(upsc "${ups}" input.power)"
   input_real_power="$(upsc "${ups}" input.realpower)"
   battery_charge="$(upsc "${ups}" battery.charge)"
@@ -113,12 +116,13 @@ for ups in ${UPS_LIST}; do
     if [[ -n "${last_test_date}" ]]; then
       echo "Last Self-Test Date: ${last_test_date}"
     fi
-
     echo ""
     if [[ -n "${uptime}" ]]; then
       echo "Uptime: ${uptime} s"
     fi
-    echo "Status: ${status}"
+    if [[ -n "${status}" ]]; then
+      echo "Status: ${status}"
+    fi
     if [[ -n "${temperature}" ]]; then
       echo "Temperature: ${temperature} °C"
     fi
@@ -128,16 +132,27 @@ for ups in ${UPS_LIST}; do
     if [[ -n "${efficiency}" ]]; then
       echo "Efficiency: ${efficiency} %"
     fi
-
     echo ""
     if [[ -n "${input_voltage}" ]]; then
-      echo "Input Voltage: ${input_voltage} V"
+      if [[ -n "${input_voltage_nominal}" ]]; then
+        echo "Input Voltage: ${input_voltage} V (${input_voltage_nominal} V nominal)"
+      else
+        echo "Input Voltage: ${input_voltage} V"
+      fi
     fi
     if [[ -n "${input_current}" ]]; then
-      echo "Input Current: ${input_current} A"
+      if [[ -n "${input_current_nominal}" ]]; then
+        echo "Input Current: ${input_current} A (${input_current_nominal} A nominal)"
+      else
+        echo "Input Frequency: ${input_frequency} Hz"
+      fi
     fi
     if [[ -n "${input_frequency}" ]]; then
-      echo "Input Frequency: ${input_frequency} Hz"
+      if [[ -n "${input_frequency_nominal}" ]]; then
+        echo "Input Frequency: ${input_frequency} Hz (${input_frequency_nominal} Hz nominal)"
+      else
+        echo "Input Frequency: ${input_frequency} Hz"
+      fi
     fi
     if [[ -n "${input_power}" ]]; then
       echo "Input Apparent Power: ${input_power} VA"
@@ -145,48 +160,52 @@ for ups in ${UPS_LIST}; do
     if [[ -n "${input_real_power}" ]]; then
       echo "Input Real Power: ${input_real_power} W"
     fi
-
     echo ""
     if [[ -n "${output_voltage}" ]]; then
-      echo "Output Voltage: ${output_voltage} V"
-    fi
-    if [[ -n "${output_voltage_nominal}" ]]; then
-      echo "Output Voltage (nominal): ${output_voltage_nominal} V"
+      if [[ -n "${output_voltage_nominal}" ]]; then
+        echo "Output Voltage: ${output_voltage} V (${output_voltage_nominal} V nominal)"
+      else
+        echo "Output Voltage: ${output_voltage} V"
+      fi
     fi
     if [[ -n "${output_current}" ]]; then
-      echo "Output Current: ${output_current} A"
-    fi
-    if [[ -n "${output_current_nominal}" ]]; then
-      echo "Output Current (nominal): ${output_current_nominal} A"
+      if [[ -n "${output_current_nominal}" ]]; then
+        echo "Output Current: ${output_current} A (${output_current_nominal} A nominal)"
+      else
+        echo "Output Current: ${output_current} A"
+      fi
     fi
     if [[ -n "${output_frequency}" ]]; then
-      echo "Output Frequency: ${output_frequency} Hz"
-    fi
-    if [[ -n "${output_frequency_nominal}" ]]; then
-      echo "Output Frequency (nominal): ${output_frequency_nominal} Hz"
+      if [[ -n "${output_frequency_nominal}" ]]; then
+        echo "Output Frequency: ${output_frequency} Hz (${output_frequency_nominal} Hz nominal)"
+      else
+        echo "Output Frequency: ${output_frequency} Hz"
+      fi
     fi
     if [[ -n "${power}" ]]; then
-      echo "Output Apparent Power: ${power} VA"
-    fi
-    if [[ -n "${power_nominal}" ]]; then
-      echo "Output Apparent Power (nominal): ${power_nominal} VA"
+      if [[ -n "${power_nominal}" ]]; then
+        echo "Output Apparent Power: ${power} VA (${power_nominal} VA nominal)"
+      else
+        echo "Output Apparent Power: ${power} VA"
+      fi
     fi
     if [[ -n "${real_power}" ]]; then
-      echo "Output Real Power: ${real_power} W"
+      if [[ -n "${real_power_nominal}" ]]; then
+        echo "Output Real Power: ${real_power} W (${real_power_nominal} W nominal)"
+      else
+        echo "Output Real Power: ${real_power} W"
+      fi
     fi
-    if [[ -n "${real_power_nominal}" ]]; then
-      echo "Output Real Power (nominal): ${real_power_nominal} W"
-    fi
-
     echo ""
     if [[ -n "${battery_charge}" ]]; then
       echo "Battery Charge: ${battery_charge} %"
     fi
     if [[ -n "${battery_voltage}" ]]; then
-      echo "Battery Voltage: ${battery_voltage} V"
-    fi
-    if [[ -n "${battery_voltage_nominal}" ]]; then
-      echo "Battery Voltage (nominal): ${battery_voltage_nominal} V"
+      if [[ -n "${battery_voltage_nominal}" ]]; then
+        echo "Battery Voltage: ${battery_voltage} V (${battery_voltage_nominal} V nominal)"
+      else
+        echo "Battery Voltage: ${battery_voltage} V"
+      fi
     fi
     if [[ -n "${battery_current}" ]]; then
       echo "Battery Current: ${battery_current} A"
@@ -203,7 +222,6 @@ for ups in ${UPS_LIST}; do
     if [[ -n "${battery_type}" ]]; then
       echo "Battery Type: ${battery_type}"
     fi
-
     echo ""
     if [[ -n "${beeper_status}" ]]; then
       echo "Beeper Status: ${beeper_status}"
