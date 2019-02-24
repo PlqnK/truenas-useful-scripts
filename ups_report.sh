@@ -26,6 +26,7 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 ) >> "${EMAIL_CONTENT}"
 for ups in ${UPS_LIST}; do
   status="$(upsc "${ups}" ups.status)"
+  status="${status:-N/A}"
   load="$(upsc "${ups}" ups.load)"
   load="${load:-N/A}"
   real_power="$(upsc "${ups}" ups.realpower)"
