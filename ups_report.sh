@@ -62,56 +62,134 @@ for ups in ${UPS_LIST}; do
   (
     echo "<b>UPS status report for ${ups}:</b>"
     echo "UPS: ${manufacturer} ${model}"
-    echo "Serial: ${serial_number}"
-    echo "Firmware version: ${firmware_version}"
-    echo "Battery Change Date: ${battery_change_date}"
-    echo "Battery Manufacturing Date: ${battery_manufacturing_date}"
-    echo "Last Self-Test Result: ${last_test_result}"
-    echo -e "Last Self-Test Date: ${last_test_date}\n"
+    if [[ -n "${serial_number}" ]]; then
+      echo "Serial: ${serial_number}"
+    fi
+    if [[ -n "${firmware_version}" ]]; then
+      echo "Firmware version: ${firmware_version}"
+    fi
+    if [[ -n "${battery_change_date}" ]]; then
+      echo "Battery Change Date: ${battery_change_date}"
+    fi
+    if [[ -n "${battery_manufacturing_date}" ]]; then
+      echo "Battery Manufacturing Date: ${battery_manufacturing_date}"
+    fi
+    if [[ -n "${last_test_result}" ]]; then
+      echo "Last Self-Test Result: ${last_test_result}"
+    fi
+    if [[ -n "${last_test_date}" ]]; then
+      echo "Last Self-Test Date: ${last_test_date}"
+    fi
 
-    echo "<i>Status</i>"
+    echo -e "\n<i>Status</i>"
     echo "Status: ${status}"
-    echo "Load: ${load} %"
-    echo "Efficiency: ${efficiency} %"
-    echo "Uptime: ${uptime} s"
-    echo -e "Temperature: ${temperature} °C\n"
+    if [[ -n "${load}" ]]; then
+      echo "Load: ${load} %"
+    fi
+    if [[ -n "${efficiency}" ]]; then
+      echo "Efficiency: ${efficiency} %"
+    fi
+    if [[ -n "${uptime}" ]]; then
+      echo "Uptime: ${uptime} s"
+    fi
+    if [[ -n "${temperature}" ]]; then
+      echo "Temperature: ${temperature} °C"
+    fi
 
-    echo "<i>Input</i>"
-    echo "Input Voltage: ${input_voltage} V"
-    echo "Input Current: ${input_current} A"
-    echo "Input Apparent Power: ${input_power} VA"
-    echo "Input Real Power: ${input_real_power} W"
-    echo -e "Input Frequency: ${input_frequency} Hz\n"
+    echo -e "\n<i>Input</i>"
+    if [[ -n "${input_voltage}" ]]; then
+      echo "Input Voltage: ${input_voltage} V"
+    fi
+    if [[ -n "${input_current}" ]]; then
+      echo "Input Current: ${input_current} A"
+    fi
+    if [[ -n "${input_power}" ]]; then
+      echo "Input Apparent Power: ${input_power} VA"
+    fi
+    if [[ -n "${input_real_power}" ]]; then
+      echo "Input Real Power: ${input_real_power} W"
+    fi
+    if [[ -n "${input_frequency}" ]]; then
+      echo "Input Frequency: ${input_frequency} Hz"
+    fi
 
-    echo "<i>Output</i>"
-    echo "Output Voltage: ${output_voltage} V"
-    echo "Output Voltage (nominal): ${output_volatage_nominal} V"
-    echo "Output Current: ${output_current} A"
-    echo "Output Current (nominal): ${output_current_nominal} A"
-    echo "Output Apparent Power: ${power} VA"
-    echo "Output Apparent Power (nominal): ${power_nominal} VA"
-    echo "Output Real Power: ${real_power} W"
-    echo "Output Real Power (nominal): ${real_power_nominal} W"
-    echo "Output Frequency: ${output_frequency} Hz"
-    echo -e "Output Frequency (nominal): ${output_frequency_nominal} Hz\n"
+    echo -e "\n<i>Output</i>"
+    if [[ -n "${output_voltage}" ]]; then
+      echo "Output Voltage: ${output_voltage} V"
+    fi
+    if [[ -n "${output_volatage_nominal}" ]]; then
+      echo "Output Voltage (nominal): ${output_volatage_nominal} V"
+    fi
+    if [[ -n "${output_current}" ]]; then
+      echo "Output Current: ${output_current} A"
+    fi
+    if [[ -n "${output_current_nominal}" ]]; then
+      echo "Output Current (nominal): ${output_current_nominal} A"
+    fi
+    if [[ -n "${power}" ]]; then
+      echo "Output Apparent Power: ${power} VA"
+    fi
+    if [[ -n "${power_nominal}" ]]; then
+      echo "Output Apparent Power (nominal): ${power_nominal} VA"
+    fi
+    if [[ -n "${real_power}" ]]; then
+      echo "Output Real Power: ${real_power} W"
+    fi
+    if [[ -n "${real_power_nominal}" ]]; then
+      echo "Output Real Power (nominal): ${real_power_nominal} W"
+    fi
+    if [[ -n "${output_frequency}" ]]; then
+      echo "Output Frequency: ${output_frequency} Hz"
+    fi
+    if [[ -n "${output_frequency_nominal}" ]]; then
+      echo "Output Frequency (nominal): ${output_frequency_nominal} Hz"
+    fi
 
-    echo "<i>Battery</i>"
-    echo "Battery Type: ${battery_type}"
-    echo "Battery Capacity: ${battery_capacity} Ah"
-    echo "Battery Runtime: ${battery_runtime} s"
-    echo "Battery Charge: ${battery_charge} %"
-    echo "Battery Temperature: ${battery_temperature} °C"
-    echo "Battery Voltage: ${battery_voltage} V"
-    echo "Battery Voltage (nominal): ${battery_voltage_nominal} V"
-    echo -e "Battery Current: ${battery_current} A\n"
+    echo -e "\n<i>Battery</i>"
+    if [[ -n "${battery_type}" ]]; then
+      echo "Battery Type: ${battery_type}"
+    fi
+    if [[ -n "${battery_capacity}" ]]; then
+      echo "Battery Capacity: ${battery_capacity} Ah"
+    fi
+    if [[ -n "${battery_runtime}" ]]; then
+      echo "Battery Runtime: ${battery_runtime} s"
+    fi
+    if [[ -n "${battery_charge}" ]]; then
+      echo "Battery Charge: ${battery_charge} %"
+    fi
+    if [[ -n "${battery_temperature}" ]]; then
+      echo "Battery Temperature: ${battery_temperature} °C"
+    fi
+    if [[ -n "${battery_voltage}" ]]; then
+      echo "Battery Voltage: ${battery_voltage} V"
+    fi
+    if [[ -n "${battery_voltage_nominal}" ]]; then
+      echo "Battery Voltage (nominal): ${battery_voltage_nominal} V"
+    fi
+    if [[ -n "${battery_current}" ]]; then
+      echo "Battery Current: ${battery_current} A"
+    fi
 
-    echo "<i>UPS Configuration</i>"
-    echo "Beeper Status: ${beeper_status}"
-    echo "Shutdown Timer: ${timer_shutdown} s"
-    echo "Start Timer: ${timer_start} s"
-    echo "Shutdown Delay: ${delay_shutdown} s"
-    echo "Start Delay: ${delay_start} s"
-    echo "Self-Test Interval: ${test_interval} s"
+    echo -e "\n<i>UPS Configuration</i>"
+    if [[ -n "${beeper_status}" ]]; then
+      echo "Beeper Status: ${beeper_status}"
+    fi
+    if [[ -n "${timer_shutdown}" ]]; then
+      echo "Shutdown Timer: ${timer_shutdown} s"
+    fi
+    if [[ -n "${timer_start}" ]]; then
+      echo "Start Timer: ${timer_start} s"
+    fi
+    if [[ -n "${delay_shutdown}" ]]; then
+      echo "Shutdown Delay: ${delay_shutdown} s"
+    fi
+    if [[ -n "${delay_start}" ]]; then
+      echo "Start Delay: ${delay_start} s"
+    fi
+    if [[ -n "${test_interval}" ]]; then
+      echo "Self-Test Interval: ${test_interval} s"
+    fi
   ) >> "${EMAIL_CONTENT}"
 done
 
