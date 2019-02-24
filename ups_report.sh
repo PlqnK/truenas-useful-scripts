@@ -13,8 +13,6 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
   echo "Content-Type: text/html"
   echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822.
   echo "<pre style=\"font-family:monospace\">" # Only specify monospace font to let Email client decide of the rest.
-  echo "<b>UPS status report:</b>"
-  date "+Time: %Y-%m-%d %H:%M:%S"
 ) > "${EMAIL_CONTENT}"
 
 for ups in ${UPS_LIST}; do
@@ -62,7 +60,9 @@ for ups in ${UPS_LIST}; do
   battery_manufacturing_date="$(upsc "${ups}" battery.mfr.date)"
 
   (
-    echo "UPS: ${manufacturer} ${model} (Serial: ${serial_number} / FW: ${firmware_version})"
+    echo "<b>UPS status report for ${ups}:</b>"
+    echo "UPS: ${manufacturer} ${model}"
+    echo "Serial: ${serial_number} / FW: ${firmware_version}"
     echo "Status: ${status}"
     echo "Load: ${load} %"
     echo "Efficiency: ${efficiency} %"
@@ -71,14 +71,16 @@ for ups in ${UPS_LIST}; do
     echo "Battery Change Date: ${battery_change_date}"
     echo "Battery Manufacturing Date: ${battery_manufacturing_date}"
     echo "Last Self-Test Result: ${last_test_result}"
-    echo "Last Self-Test Date: ${last_test_date}"
+    echo -e "Last Self-Test Date: ${last_test_date}\n"
 
+    echo "<i>Input</i>"
     echo "Input Voltage: ${input_voltage} V"
     echo "Input Current: ${input_current} A"
     echo "Input Apparent Power: ${input_power} VA"
     echo "Input Real Power: ${input_real_power} W"
-    echo "Input Frequency: ${input_frequency} Hz"
+    echo -e "Input Frequency: ${input_frequency} Hz\n"
 
+    echo "<i>Output</i>"
     echo "Output Voltage: ${output_voltage} V"
     echo "Output Voltage (nominal): ${output_volatage_nominal} V"
     echo "Output Current: ${output_current} A"
@@ -88,8 +90,9 @@ for ups in ${UPS_LIST}; do
     echo "Output Real Power: ${real_power} W"
     echo "Output Real Power (nominal): ${real_power_nominal} W"
     echo "Output Frequency: ${output_frequency} Hz"
-    echo "Output Frequency (nominal): ${output_frequency_nominal} Hz"
+    echo -e "Output Frequency (nominal): ${output_frequency_nominal} Hz\n"
 
+    echo "<i>Battery</i>"
     echo "Battery Type: ${battery_type}"
     echo "Battery Capacity: ${battery_capacity} Ah"
     echo "Battery Runtime: ${battery_runtime} s"
@@ -97,8 +100,9 @@ for ups in ${UPS_LIST}; do
     echo "Battery Temperature: ${battery_temperature} °C"
     echo "Battery Voltage: ${battery_voltage} V"
     echo "Battery Voltage (nominal): ${battery_voltage_nominal} V"
-    echo "Battery Current: ${battery_current} A"
+    echo -e "Battery Current: ${battery_current} A\n"
 
+    echo "<i>UPS Configuration</i>"
     echo "Beeper Status: ${beeper_status}"
     echo "Shutdown Timer: ${timer_shutdown} s"
     echo "Start Timer: ${timer_start} s"
