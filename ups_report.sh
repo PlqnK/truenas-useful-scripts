@@ -43,7 +43,7 @@ for ups in ${UPS_LIST}; do
   last_test_date="$(upsc "${ups}" ups.test.date)"
   last_test_date="${last_test_date:-N/A}"
 
-  printf "|%-14s|%-6s|%4s|%6s|%7s|%7s|%7s|%7s|%-10s|%-10s|\n" "${ups}" "${status}" "${load}" "${real_power}" \
+  printf "|%-14s|%6s|%4s|%6s|%7s|%7s|%7s|%7s|%10s|%10s|\n" "${ups}" "${status}" "${load}" "${real_power}" \
     "${battery_charge}" "${battery_voltage}" "${battery_temperature}" "${battery_runtime}" "${battery_change_date}" \
     "${last_test_date}" >> "${EMAIL_CONTENT}"
 done
