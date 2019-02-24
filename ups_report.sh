@@ -52,195 +52,150 @@ echo "+--------------+------+----+------+-------+-------+-------+-------+-------
 
 # Print a detailed UPS report for each UPS.
 for ups in ${UPS_LIST}; do
-  model="$(upsc "${ups}" device.model | sed -e 's/[[:space:]]*$//')"
-  manufacturer="$(upsc "${ups}" device.mfr)"
-  serial_number="$(upsc "${ups}" device.serial)"
-  uptime="$(upsc "${ups}" device.uptime)"
-  status="$(upsc "${ups}" ups.status)"
-  firmware_version="$(upsc "${ups}" ups.firmware)"
-  temperature="$(upsc "${ups}" ups.temperature)"
-  load="$(upsc "${ups}" ups.load)"
-  delay_shutdown="$(upsc "${ups}" ups.delay.shutdown)"
-  delay_start="$(upsc "${ups}" ups.delay.start)"
-  timer_shutdown="$(upsc "${ups}" ups.timer.shutdown)"
-  timer_start="$(upsc "${ups}" ups.timer.start)"
-  test_interval="$(upsc "${ups}" ups.test.interval)"
-  last_test_result="$(upsc "${ups}" ups.test.result)"
-  last_test_date="$(upsc "${ups}" ups.test.date)"
-  efficiency="$(upsc "${ups}" ups.efficiency)"
-  power="$(upsc "${ups}" ups.power)"
-  power_nominal="$(upsc "${ups}" ups.power.nominal)"
-  real_power="$(upsc "${ups}" ups.realpower)"
-  real_power_nominal="$(upsc "${ups}" ups.realpower.nominal)"
-  beeper_status="$(upsc "${ups}" ups.beeper.status)"
-  output_voltage="$(upsc "${ups}" output.voltage)"
-  output_voltage_nominal="$(upsc "${ups}" output.voltage.nominal)"
-  output_current="$(upsc "${ups}" output.current.nominal)"
-  output_current_nominal="$(upsc "${ups}" output.current)"
-  output_frequency="$(upsc "${ups}" output.frequency)"
-  output_frequency_nominal="$(upsc "${ups}" output.frequency.nominal)"
-  input_voltage="$(upsc "${ups}" input.voltage)"
-  input_voltage_nominal="$(upsc "${ups}" input.voltage.nominal)"
-  input_current="$(upsc "${ups}" input.current)"
-  input_current_nominal="$(upsc "${ups}" input.current.nominal)"
-  input_frequency="$(upsc "${ups}" input.frequency)"
-  input_frequency_nominal="$(upsc "${ups}" input.frequency.nominal)"
-  input_power="$(upsc "${ups}" input.power)"
-  input_real_power="$(upsc "${ups}" input.realpower)"
-  battery_charge="$(upsc "${ups}" battery.charge)"
-  battery_voltage="$(upsc "${ups}" battery.voltage)"
-  battery_voltage_nominal="$(upsc "${ups}" battery.voltage.nominal)"
-  battery_capacity="$(upsc "${ups}" battery.capacity)"
-  battery_current="$(upsc "${ups}" battery.current)"
-  battery_temperature="$(upsc "${ups}" battery.temperature)"
-  battery_runtime="$(upsc "${ups}" battery.runtime)"
-  battery_change_date="$(upsc "${ups}" battery.date)"
-  battery_manufacturing_date="$(upsc "${ups}" battery.mfr.date)"
-  battery_type="$(upsc "${ups}" battery.type)"
-
+  upsc="upsc ${ups}"
   (
     echo ""
     echo ""
-    echo "<b>UPS status report for ${ups} UPS (${manufacturer} ${model}: ${serial_number}):</b>"
-    if [[ -n "${firmware_version}" ]]; then
-      echo "Firmware version: ${firmware_version}"
+    echo "<b>UPS status report for ${ups} UPS ($(${upsc} device.mfr) $(${upsc} device.model | sed -e 's/[[:space:]]*$//'): $(${upsc} device.serial)):</b>"
+    if [[ -n "$(${upsc} ups.firmware)" ]]; then
+      echo "Firmware version: $(${upsc} ups.firmware)"
     fi
-    if [[ -n "${battery_change_date}" ]]; then
-      echo "Battery Change Date: ${battery_change_date}"
+    if [[ -n "$(${upsc} battery.date)" ]]; then
+      echo "Battery Change Date: $(${upsc} battery.date)"
     fi
-    if [[ -n "${battery_manufacturing_date}" ]]; then
-      echo "Battery Manufacturing Date: ${battery_manufacturing_date}"
+    if [[ -n "$(${upsc} battery.mfr.date)" ]]; then
+      echo "Battery Manufacturing Date: $(${upsc} battery.mfr.date)"
     fi
-    if [[ -n "${last_test_result}" ]]; then
-      echo "Last Self-Test Result: ${last_test_result}"
+    if [[ -n "$(${upsc} ups.test.result)" ]]; then
+      echo "Last Self-Test Result: $(${upsc} ups.test.result)"
     fi
-    if [[ -n "${last_test_date}" ]]; then
-      echo "Last Self-Test Date: ${last_test_date}"
-    fi
-    echo ""
-    if [[ -n "${uptime}" ]]; then
-      echo "Uptime: ${uptime} s"
-    fi
-    if [[ -n "${status}" ]]; then
-      echo "Status: ${status}"
-    fi
-    if [[ -n "${temperature}" ]]; then
-      echo "Temperature: ${temperature} °C"
-    fi
-    if [[ -n "${load}" ]]; then
-      echo "Load: ${load} %"
-    fi
-    if [[ -n "${efficiency}" ]]; then
-      echo "Efficiency: ${efficiency} %"
+    if [[ -n "$(${upsc} ups.test.date)" ]]; then
+      echo "Last Self-Test Date: $(${upsc} ups.test.date)"
     fi
     echo ""
-    if [[ -n "${input_voltage}" ]]; then
-      if [[ -n "${input_voltage_nominal}" ]]; then
-        echo "Input Voltage: ${input_voltage} V (${input_voltage_nominal} V nominal)"
-      else
-        echo "Input Voltage: ${input_voltage} V"
-      fi
+    if [[ -n "$(${upsc} device.uptime)" ]]; then
+      echo "Uptime: $(${upsc} device.uptime) s"
     fi
-    if [[ -n "${input_current}" ]]; then
-      if [[ -n "${input_current_nominal}" ]]; then
-        echo "Input Current: ${input_current} A (${input_current_nominal} A nominal)"
-      else
-        echo "Input Frequency: ${input_frequency} Hz"
-      fi
+    if [[ -n "$(${upsc} ups.status)" ]]; then
+      echo "Status: $(${upsc} ups.status)"
     fi
-    if [[ -n "${input_frequency}" ]]; then
-      if [[ -n "${input_frequency_nominal}" ]]; then
-        echo "Input Frequency: ${input_frequency} Hz (${input_frequency_nominal} Hz nominal)"
-      else
-        echo "Input Frequency: ${input_frequency} Hz"
-      fi
+    if [[ -n "$(${upsc} ups.temperature)" ]]; then
+      echo "Temperature: $(${upsc} ups.temperature) °C"
     fi
-    if [[ -n "${input_power}" ]]; then
-      echo "Input Apparent Power: ${input_power} VA"
+    if [[ -n "$(${upsc} ups.load)" ]]; then
+      echo "Load: $(${upsc} ups.load) %"
     fi
-    if [[ -n "${input_real_power}" ]]; then
-      echo "Input Real Power: ${input_real_power} W"
+    if [[ -n "$(${upsc} ups.efficiency)" ]]; then
+      echo "Efficiency: $(${upsc} ups.efficiency) %"
     fi
     echo ""
-    if [[ -n "${output_voltage}" ]]; then
-      if [[ -n "${output_voltage_nominal}" ]]; then
-        echo "Output Voltage: ${output_voltage} V (${output_voltage_nominal} V nominal)"
+    if [[ -n "$(${upsc} input.voltage)" ]]; then
+      if [[ -n "$(${upsc} input.voltage.nominal)" ]]; then
+        echo "Input Voltage: $(${upsc} input.voltage) V ($(${upsc} input.voltage.nominal) V nominal)"
       else
-        echo "Output Voltage: ${output_voltage} V"
+        echo "Input Voltage: $(${upsc} input.voltage) V"
       fi
     fi
-    if [[ -n "${output_current}" ]]; then
-      if [[ -n "${output_current_nominal}" ]]; then
-        echo "Output Current: ${output_current} A (${output_current_nominal} A nominal)"
+    if [[ -n "$(${upsc} input.current)" ]]; then
+      if [[ -n "$(${upsc} input.current.nominal)" ]]; then
+        echo "Input Current: $(${upsc} input.current) A ($(${upsc} input.current.nominal) A nominal)"
       else
-        echo "Output Current: ${output_current} A"
+        echo "Input Current: $(${upsc} input.current) A"
       fi
     fi
-    if [[ -n "${output_frequency}" ]]; then
-      if [[ -n "${output_frequency_nominal}" ]]; then
-        echo "Output Frequency: ${output_frequency} Hz (${output_frequency_nominal} Hz nominal)"
+    if [[ -n "$(${upsc} input.frequency)" ]]; then
+      if [[ -n "$(${upsc} input.frequency.nominal)" ]]; then
+        echo "Input Frequency: $(${upsc} input.frequency) Hz ($(${upsc} input.frequency.nominal) Hz nominal)"
       else
-        echo "Output Frequency: ${output_frequency} Hz"
+        echo "Input Frequency: $(${upsc} input.frequency) Hz"
       fi
     fi
-    if [[ -n "${power}" ]]; then
-      if [[ -n "${power_nominal}" ]]; then
-        echo "Output Apparent Power: ${power} VA (${power_nominal} VA nominal)"
+    if [[ -n "$(${upsc} input.power)" ]]; then
+      echo "Input Apparent Power: $(${upsc} input.power) VA"
+    fi
+    if [[ -n "$(${upsc} input.realpower)" ]]; then
+      echo "Input Real Power: $(${upsc} input.realpower) W"
+    fi
+    echo ""
+    if [[ -n "$(${upsc} output.voltage)" ]]; then
+      if [[ -n "$(${upsc} output.voltage.nominal)" ]]; then
+        echo "Output Voltage: $(${upsc} output.voltage) V ($(${upsc} output.voltage.nominal) V nominal)"
       else
-        echo "Output Apparent Power: ${power} VA"
+        echo "Output Voltage: $(${upsc} output.voltage) V"
       fi
     fi
-    if [[ -n "${real_power}" ]]; then
-      if [[ -n "${real_power_nominal}" ]]; then
-        echo "Output Real Power: ${real_power} W (${real_power_nominal} W nominal)"
+    if [[ -n "$(${upsc} output.current)" ]]; then
+      if [[ -n "$(${upsc} output.current.nominal)" ]]; then
+        echo "Output Current: $(${upsc} output.current) A ($(${upsc} output.current.nominal) A nominal)"
       else
-        echo "Output Real Power: ${real_power} W"
+        echo "Output Current: $(${upsc} output.current) A"
+      fi
+    fi
+    if [[ -n "$(${upsc} output.frequency)" ]]; then
+      if [[ -n "$(${upsc} output.frequency.nominal)" ]]; then
+        echo "Output Frequency: $(${upsc} output.frequency) Hz ($(${upsc} output.frequency.nominal) Hz nominal)"
+      else
+        echo "Output Frequency: $(${upsc} output.frequency) Hz"
+      fi
+    fi
+    if [[ -n "$(${upsc} ups.power)" ]]; then
+      if [[ -n "$(${upsc} ups.power.nominal)" ]]; then
+        echo "Output Apparent Power: $(${upsc} ups.power) VA ($(${upsc} ups.power.nominal) VA nominal)"
+      else
+        echo "Output Apparent Power: $(${upsc} ups.power) VA"
+      fi
+    fi
+    if [[ -n "$(${upsc} ups.realpower)" ]]; then
+      if [[ -n "$(${upsc} ups.realpower.nominal)" ]]; then
+        echo "Output Real Power: $(${upsc} ups.realpower) W ($(${upsc} ups.realpower.nominal) W nominal)"
+      else
+        echo "Output Real Power: $(${upsc} ups.realpower) W"
       fi
     fi
     echo ""
-    if [[ -n "${battery_charge}" ]]; then
-      echo "Battery Charge: ${battery_charge} %"
+    if [[ -n "$(${upsc} battery.charge)" ]]; then
+      echo "Battery Charge: $(${upsc} battery.charge) %"
     fi
-    if [[ -n "${battery_voltage}" ]]; then
-      if [[ -n "${battery_voltage_nominal}" ]]; then
-        echo "Battery Voltage: ${battery_voltage} V (${battery_voltage_nominal} V nominal)"
+    if [[ -n "$(${upsc} battery.voltage)" ]]; then
+      if [[ -n "$(${upsc} battery.voltage.nominal)" ]]; then
+        echo "Battery Voltage: $(${upsc} battery.voltage) V ($(${upsc} battery.voltage.nominal) V nominal)"
       else
-        echo "Battery Voltage: ${battery_voltage} V"
+        echo "Battery Voltage: $(${upsc} battery.voltage) V"
       fi
     fi
-    if [[ -n "${battery_current}" ]]; then
-      echo "Battery Current: ${battery_current} A"
+    if [[ -n "$(${upsc} battery.current)" ]]; then
+      echo "Battery Current: $(${upsc} battery.current) A"
     fi
-    if [[ -n "${battery_capacity}" ]]; then
-      echo "Battery Capacity: ${battery_capacity} Ah"
+    if [[ -n "$(${upsc} battery.capacity)" ]]; then
+      echo "Battery Capacity: $(${upsc} battery.capacity) Ah"
     fi
-    if [[ -n "${battery_temperature}" ]]; then
-      echo "Battery Temperature: ${battery_temperature} °C"
+    if [[ -n "$(${upsc} battery.temperature)" ]]; then
+      echo "Battery Temperature: $(${upsc} battery.temperature) °C"
     fi
-    if [[ -n "${battery_runtime}" ]]; then
-      echo "Battery Runtime: ${battery_runtime} s"
+    if [[ -n "$(${upsc} battery.runtime)" ]]; then
+      echo "Battery Runtime: $(${upsc} battery.runtime) s"
     fi
-    if [[ -n "${battery_type}" ]]; then
-      echo "Battery Type: ${battery_type}"
+    if [[ -n "$(${upsc} battery.type)" ]]; then
+      echo "Battery Type: $(${upsc} battery.type)"
     fi
     echo ""
-    if [[ -n "${beeper_status}" ]]; then
-      echo "Beeper Status: ${beeper_status}"
+    if [[ -n "$(${upsc} ups.beeper.status)" ]]; then
+      echo "Beeper Status: $(${upsc} ups.beeper.status)"
     fi
-    if [[ -n "${delay_shutdown}" ]]; then
-      echo "Shutdown Delay: ${delay_shutdown} s"
+    if [[ -n "$(${upsc} ups.delay.shutdown)" ]]; then
+      echo "Shutdown Delay: $(${upsc} ups.delay.shutdown) s"
     fi
-    if [[ -n "${delay_start}" ]]; then
-      echo "Start Delay: ${delay_start} s"
+    if [[ -n "$(${upsc} ups.delay.start)" ]]; then
+      echo "Start Delay: $(${upsc} ups.delay.start) s"
     fi
-    if [[ -n "${timer_shutdown}" ]]; then
-      echo "Shutdown Timer: ${timer_shutdown} s"
+    if [[ -n "$(${upsc} ups.timer.shutdown)" ]]; then
+      echo "Shutdown Timer: $(${upsc} ups.timer.shutdown) s"
     fi
-    if [[ -n "${timer_start}" ]]; then
-      echo "Start Timer: ${timer_start} s"
+    if [[ -n "$(${upsc} ups.timer.start)" ]]; then
+      echo "Start Timer: $("${upsc}" ups.timer.start) s"
     fi
-    if [[ -n "${test_interval}" ]]; then
-      echo "Self-Test Interval: ${test_interval} s"
+    if [[ -n "$(${upsc} ups.test.interval)" ]]; then
+      echo "Self-Test Interval: $(${upsc} ups.test.interval) s"
     fi
   ) >> "${EMAIL_CONTENT}"
 done
