@@ -15,6 +15,41 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
   echo "<pre style=\"font-family:monospace\">" # Only specify monospace font to let Email client decide of the rest.
 ) > "${EMAIL_CONTENT}"
 
+# Print a summary table of the status of all UPS.
+(
+  echo "<b>UPS status report summary for all UPS:</b>"
+  echo "+--------------+------+----+------+-------+-------+-------+-------+----------+----------+"
+  echo "|Device        |Status|Load|Real  |Battery|Battery|Battery|Battery|Battery   |Last      |"
+  echo "|              |      |    |Power |Charge |Voltage|Temp   |Runtime|Change    |Test      |"
+  echo "|              |      |    |Output|       |       |       |       |Date      |Date      |"
+  echo "+--------------+------+----+------+-------+-------+-------+-------+----------+----------+"
+) >> "${EMAIL_CONTENT}"
+for ups in ${UPS_LIST}; do
+  status="$(upsc "${ups}" ups.status)"
+  load="$(upsc "${ups}" ups.load)"
+  load="${load:-N/A}"
+  real_power="$(upsc "${ups}" ups.realpower)"
+  real_power="${real_power:-N/A}"
+  battery_charge="$(upsc "${ups}" battery.charge)"
+  battery_charge="${battery_charge:-N/A}"
+  battery_voltage="$(upsc "${ups}" battery.voltage)"
+  battery_voltage="${battery_voltage:-N/A}"
+  battery_temperature="$(upsc "${ups}" battery.temperature)"
+  battery_temperature="${battery_temperature:-N/A}"
+  battery_runtime="$(upsc "${ups}" battery.runtime)"
+  battery_runtime="${battery_runtime:-N/A}"
+  battery_change_date="$(upsc "${ups}" battery.date)"
+  battery_change_date="${battery_change_date:-N/A}"
+  last_test_date="$(upsc "${ups}" ups.test.date)"
+  last_test_date="${last_test_date:-N/A}"
+
+  printf "|%-14s|%-6s|%4s|%6s|%7s|%7s|%7s|%7s|%-10s|%-10s|" "${ups}" "${status}" "${load}" "${real_power}" \
+    "${battery_charge}" "${battery_voltage}" "${battery_temperature}" "${battery_runtime}" "${battery_change_date}" \
+    "${last_test_date}" >> "${EMAIL_CONTENT}"
+done
+echo "+--------------+------+----+------+-------+-------+-------+-------+----------+----------+" >> "${EMAIL_CONTENT}"
+
+# Print a detailed UPS report for each UPS.
 for ups in ${UPS_LIST}; do
   model="$(upsc "${ups}" device.model | sed -e 's/[[:space:]]*$//')"
   manufacturer="$(upsc "${ups}" device.mfr)"
