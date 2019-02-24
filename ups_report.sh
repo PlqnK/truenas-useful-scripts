@@ -201,19 +201,19 @@ for ups in ${UPS_LIST}; do
       echo "Reboot Timer: $(${upsc} ups.timer.reboot) s"
     fi
     if [[ -n "$(${upsc} ups.timer.start)" ]]; then
-      echo "Start Timer: $("${upsc}" ups.timer.start) s"
+      echo "Start Timer: $(${upsc} ups.timer.start) s"
     fi
     if [[ -n "$(${upsc} ups.start.auto)" ]]; then
-      echo "Auto Start: $("${upsc}" ups.start.auto)"
+      echo "Auto Start: $(${upsc} ups.start.auto)"
     fi
     if [[ -n "$(${upsc} ups.start.battery)" ]]; then
-      echo "Start From Battery: $("${upsc}" ups.start.battery)"
+      echo "Start From Battery: $(${upsc} ups.start.battery)"
     fi
     if [[ -n "$(${upsc} ups.start.reboot)" ]]; then
-      echo "Cold Start From Battery: $("${upsc}" ups.start.reboot)"
+      echo "Cold Start From Battery: $(${upsc} ups.start.reboot)"
     fi
     if [[ -n "$(${upsc} ups.shutdown)" ]]; then
-      echo "Shutdown Ability: $("${upsc}" ups.shutdown)"
+      echo "Shutdown Ability: $(${upsc} ups.shutdown)"
     fi
     if [[ -n "$(${upsc} ups.test.interval)" ]]; then
       echo "Self-Test Interval: $(${upsc} ups.test.interval) s"
