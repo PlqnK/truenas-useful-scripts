@@ -182,8 +182,14 @@ for ups in ${UPS_LIST}; do
     if [[ -n "$(${upsc} ups.beeper.status)" ]]; then
       echo "Beeper Status: $(${upsc} ups.beeper.status)"
     fi
+    if [[ -n "$(${upsc} ups.watchdog.status)" ]]; then
+      echo "Watchdog Status: $(${upsc} ups.watchdog.status)"
+    fi
     if [[ -n "$(${upsc} ups.delay.shutdown)" ]]; then
       echo "Shutdown Delay: $(${upsc} ups.delay.shutdown) s"
+    fi
+    if [[ -n "$(${upsc} ups.delay.reboot)" ]]; then
+      echo "Reboot Delay: $(${upsc} ups.delay.reboot) s"
     fi
     if [[ -n "$(${upsc} ups.delay.start)" ]]; then
       echo "Start Delay: $(${upsc} ups.delay.start) s"
@@ -191,8 +197,23 @@ for ups in ${UPS_LIST}; do
     if [[ -n "$(${upsc} ups.timer.shutdown)" ]]; then
       echo "Shutdown Timer: $(${upsc} ups.timer.shutdown) s"
     fi
+    if [[ -n "$(${upsc} ups.timer.reboot)" ]]; then
+      echo "Reboot Timer: $(${upsc} ups.timer.reboot) s"
+    fi
     if [[ -n "$(${upsc} ups.timer.start)" ]]; then
       echo "Start Timer: $("${upsc}" ups.timer.start) s"
+    fi
+    if [[ -n "$(${upsc} ups.start.auto)" ]]; then
+      echo "Auto Start: $("${upsc}" ups.start.auto)"
+    fi
+    if [[ -n "$(${upsc} ups.start.battery)" ]]; then
+      echo "Start From Battery: $("${upsc}" ups.start.battery)"
+    fi
+    if [[ -n "$(${upsc} ups.start.reboot)" ]]; then
+      echo "Cold Start From Battery: $("${upsc}" ups.start.reboot)"
+    fi
+    if [[ -n "$(${upsc} ups.shutdown)" ]]; then
+      echo "Shutdown Ability: $("${upsc}" ups.shutdown)"
     fi
     if [[ -n "$(${upsc} ups.test.interval)" ]]; then
       echo "Self-Test Interval: $(${upsc} ups.test.interval) s"
