@@ -27,7 +27,7 @@ echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
   echo "|      |               |    |Hours|Count|Count|       |Sectors|Sectors |Errors|      |Writes|Count  |Age |"
   echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+"
 ) >> "${EMAIL_CONTENT}"
-for drive_label in ${HARD_DISK_DRIVES}; do
+for drive_label in ${SATA_DRIVES}; do
   # Ask smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors and
   # total number of seeks afterwards.
   drive_status="$(smartctl -A -i -v 7,hex48 /dev/"${drive_label}")"
@@ -99,7 +99,7 @@ done
 echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >> "${EMAIL_CONTENT}"
 
 # Print a detailed SMART report for each drive.
-for drive_label in ${HARD_DISK_DRIVES}; do
+for drive_label in ${SATA_DRIVES}; do
   drive_smart_info="$(smartctl -i /dev/"${drive_label}")"
   brand="$(echo "${drive_smart_info}" | grep "Model Family" | awk '{print $3, $4, $5}')"
   serial_number="$(echo "${drive_smart_info}" | grep "Serial Number" | awk '{print $3}')"
