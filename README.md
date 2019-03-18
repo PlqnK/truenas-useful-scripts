@@ -30,7 +30,7 @@ You then need to adapt the variables in the `user.conf` file according to your s
 Next, set the scripts as executable:
 
 ```bash
-find . -type f -name "*.sh" -exec chmod u+x {} \;
+find . -type f -name "*.sh" -exec chmod +x {} \;
 ```
 
 Finally you will need to create cron jobs in the FreeNAS WebUI in order to execute the reporting and backup script on a schedule. [The FreeNAS documentation explains how to do it.](https://www.ixsystems.com/documentation/freenas/11.2/tasks.html#cron-jobs)
