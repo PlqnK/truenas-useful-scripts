@@ -6,4 +6,4 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: ludeeus/actions/shellcheck@master
+    - uses: ludeeus/action-shellcheck@0.1.0
