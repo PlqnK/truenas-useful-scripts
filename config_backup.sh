@@ -5,7 +5,7 @@
 source user.conf && source global.conf
 source format_email.sh
 
-readonly EMAIL_SUBJECT="$(hostname) config backup"
+readonly EMAIL_SUBJECT="FreeNAS $(hostname): Config backup"
 readonly EMAIL_BODY="/tmp/config_backup.html"
 readonly EMAIL_CONTENT="/tmp/config_backup.eml"
 readonly TAR_FILE="/tmp/${BACKUP_FILE_NAME}.tar.gz"

@@ -5,7 +5,7 @@
 source user.conf && source global.conf
 source format_email.sh
 
-readonly EMAIL_SUBJECT="$(hostname) zpool status report"
+readonly EMAIL_SUBJECT="FreeNAS $(hostname): zpool status report"
 readonly EMAIL_BODY="/tmp/zpool_report.html"
 readonly EMAIL_CONTENT="/tmp/zpool_report.eml"
 

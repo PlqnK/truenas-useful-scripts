@@ -5,7 +5,7 @@
 source user.conf && source global.conf
 source format_email.sh
 
-readonly EMAIL_SUBJECT="$(hostname) UPS status report"
+readonly EMAIL_SUBJECT="FreeNAS $(hostname): UPS status report"
 readonly EMAIL_BODY="/tmp/ups_report.html"
 readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 
