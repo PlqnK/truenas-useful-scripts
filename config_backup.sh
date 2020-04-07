@@ -7,7 +7,6 @@ source format_email.sh
 
 readonly EMAIL_SUBJECT="FreeNAS $(hostname): Config backup"
 readonly EMAIL_BODY="/tmp/config_backup.html"
-readonly EMAIL_CONTENT="/tmp/config_backup.eml"
 readonly TAR_FILE="/tmp/${BACKUP_FILE_NAME}.tar.gz"
 
 if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; then # Send via Email/Store config backup.
@@ -24,13 +23,8 @@ if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; the
     echo "-- End of config backup report --"
     echo "</pre>"
   ) > "${EMAIL_BODY}"
-  format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
-  format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
-  format_email_attachment "${TAR_FILE}" >> "${EMAIL_CONTENT}"
-  format_email_footer >> "${EMAIL_CONTENT}"
-  sendmail -i -t < "${EMAIL_CONTENT}"
+  format_email "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" "${EMAIL_BODY}" "${TAR_FILE}" | sendmail -i -t
   rm "${EMAIL_BODY}"
-  rm "${EMAIL_CONTENT}"
   # Also store it somewhere that will be backed up by another service.
   if [[ "${BACKUP_FILE_PATH}" != "" ]]; then
     cp "${TAR_FILE}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
@@ -49,10 +43,6 @@ else # Send error message via Email.
     echo "-- End of config backup report --"
     echo "</pre>"
   ) > "${EMAIL_BODY}"
-  format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
-  format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
-  format_email_footer >> "${EMAIL_CONTENT}"
-  sendmail -i -t < "${EMAIL_CONTENT}"
+  format_email "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" "${EMAIL_BODY}" | sendmail -i -t
   rm "${EMAIL_BODY}"
-  rm "${EMAIL_CONTENT}"
 fi
