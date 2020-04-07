@@ -3,17 +3,14 @@
 # Send a UPS status summary via Email.
 
 source user.conf && source global.conf
+source format_email.sh
 
 readonly EMAIL_SUBJECT="$(hostname) UPS status report"
+readonly EMAIL_BODY="/tmp/ups_report.html"
 readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 
-(
-  echo "To: ${EMAIL_ADDRESS}"
-  echo "Subject: ${EMAIL_SUBJECT}"
-  echo "Content-Type: text/html"
-  echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822.
-  echo "<pre style=\"font-family:monospace\">" # Only specify monospace font to let Email client decide of the rest.
-) > "${EMAIL_CONTENT}"
+# Only specify monospace font to let Email client decide of the rest.
+echo "<pre style=\"font-family:monospace\">" > "${EMAIL_BODY}"
 
 # Print a summary table of the status of all UPS.
 (
@@ -23,7 +20,7 @@ readonly EMAIL_CONTENT="/tmp/ups_report.eml"
   echo "|              |      |     |Power |Charge |Voltage|Temp   |Runtime|Change    |Test      |"
   echo "|              |      |     |Output|       |       |       |       |Date      |Date      |"
   echo "+--------------+------+-----+------+-------+-------+-------+-------+----------+----------+"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 for ups in ${UPS_LIST}; do
   upsc="upsc ${ups}"
 
@@ -78,9 +75,9 @@ for ups in ${UPS_LIST}; do
 
   printf "|%-14s|%6s|%5s|%6s|%7s|%7s|%7s|%7s|%10s|%10s|\n" "${ups}" "${status}" "${load}" "${real_power}" \
     "${battery_charge}" "${battery_voltage}" "${battery_temperature}" "${battery_runtime}" "${battery_change_date}" \
-    "${last_test_date}" >> "${EMAIL_CONTENT}"
+    "${last_test_date}" >> "${EMAIL_BODY}"
 done
-echo "+--------------+------+-----+------+-------+-------+-------+-------+----------+----------+" >> "${EMAIL_CONTENT}"
+echo "+--------------+------+-----+------+-------+-------+-------+-------+----------+----------+" >> "${EMAIL_BODY}"
 
 # Print a detailed UPS report for each UPS.
 for ups in ${UPS_LIST}; do
@@ -250,14 +247,18 @@ for ups in ${UPS_LIST}; do
     if [[ -n "$(${upsc} ups.test.interval 2>/dev/null)" ]]; then
       echo "Self-Test Interval: $(${upsc} ups.test.interval) s"
     fi
-  ) >> "${EMAIL_CONTENT}"
+  ) >> "${EMAIL_BODY}"
 done
 
 (
   echo ""
   echo "-- End of UPS status report --"
   echo "</pre>"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 
+format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
+format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
+format_email_footer >> "${EMAIL_CONTENT}"
 sendmail -i -t < "${EMAIL_CONTENT}"
+rm "${EMAIL_BODY}"
 rm "${EMAIL_CONTENT}"

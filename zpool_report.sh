@@ -3,20 +3,14 @@
 # Send a zpool status summary and detailed report of all pools via Email.
 
 source user.conf && source global.conf
+source format_email.sh
 
 readonly EMAIL_SUBJECT="$(hostname) zpool status report"
+readonly EMAIL_BODY="/tmp/zpool_report.html"
 readonly EMAIL_CONTENT="/tmp/zpool_report.eml"
 
-# Set Email headers
-(
-  echo "To: ${EMAIL_ADDRESS}"
-  echo "Subject: ${EMAIL_SUBJECT}"
-  echo "Content-Type: text/html"
-  echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822.
-) > "${EMAIL_CONTENT}"
-
 # Only specify monospace font to let Email client decide of the rest.
-echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
+echo "<pre style=\"font-family:monospace\">" > "${EMAIL_BODY}"
 
 # Print a summary table of the status of all pools.
 (
@@ -26,7 +20,7 @@ echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
   echo "|              |        |Errors|Errors|Errors|    |Repaired|Errors|Scrub|"
   echo "|              |        |      |      |      |    |Bytes   |      |Age  |"
   echo "+--------------+--------+------+------+------+----+--------+------+-----+"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 for pool_name in ${ZFS_POOLS}; do
   pool_health="$(zpool list -H -o health "${pool_name}")"
   pool_status="$(zpool status "${pool_name}")"
@@ -105,9 +99,9 @@ for pool_name in ${ZFS_POOLS}; do
   # Print the row with all the attributes corresponding to the pool.
   printf "|%-12s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
     "${read_errors}" "${write_errors}" "${checksum_errors}" "${pool_used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
-    "${scrub_age}" >> "${EMAIL_CONTENT}"
+    "${scrub_age}" >> "${EMAIL_BODY}"
 done
-echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_CONTENT}"
+echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_BODY}"
 
 # Print a detailed status report for each pool.
 for pool_name in ${ZFS_POOLS}; do
@@ -116,14 +110,18 @@ for pool_name in ${ZFS_POOLS}; do
     echo ""
     echo "<b>ZPool status report for ${pool_name}:</b>"
     zpool status -v "${pool_name}"
-  ) >> "${EMAIL_CONTENT}"
+  ) >> "${EMAIL_BODY}"
 done
 
 (
   echo ""
   echo "-- End of ZPool status report --"
   echo "</pre>"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 
+format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
+format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
+format_email_footer >> "${EMAIL_CONTENT}"
 sendmail -i -t < "${EMAIL_CONTENT}"
+rm "${EMAIL_BODY}"
 rm "${EMAIL_CONTENT}"
