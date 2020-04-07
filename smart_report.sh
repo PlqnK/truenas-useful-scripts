@@ -128,5 +128,5 @@ sed -i '' -e '/SMART Error Log Version/d' "${EMAIL_CONTENT}"
   echo "</pre>"
 ) >> "${EMAIL_CONTENT}"
 
-sendmail -t < "${EMAIL_CONTENT}"
+sendmail -i -t < "${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"

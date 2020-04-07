@@ -259,5 +259,5 @@ done
   echo "</pre>"
 ) >> "${EMAIL_CONTENT}"
 
-sendmail -t < "${EMAIL_CONTENT}"
+sendmail -i -t < "${EMAIL_CONTENT}"
 rm "${EMAIL_CONTENT}"
