@@ -3,20 +3,14 @@
 # Send a SMART status summary and detailed report of all SATA drives via Email.
 
 source user.conf && source global.conf
+source format_email.sh
 
 readonly EMAIL_SUBJECT="$(hostname) SMART status report"
+readonly EMAIL_BODY="/tmp/smart_report.html"
 readonly EMAIL_CONTENT="/tmp/smart_report.eml"
 
-# Set Email headers.
-(
-  echo "To: ${EMAIL_ADDRESS}"
-  echo "Subject: ${EMAIL_SUBJECT}"
-  echo "Content-Type: text/html"
-  echo -e "MIME-Version: 1.0\n" # Need a blank line between the headers and the body as per RFC 822.
-) > "${EMAIL_CONTENT}"
-
 # Only specify monospace font to let Email client decide of the rest.
-echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
+echo "<pre style=\"font-family:monospace\">" > "${EMAIL_BODY}"
 
 # Print a summary table of the status of all drives.
 (
@@ -26,7 +20,7 @@ echo "<pre style=\"font-family:monospace\">" >> "${EMAIL_CONTENT}"
   echo "|      |               |    |On   |Stop |Retry|Sectors|Pending|Uncorrec|CRC   |Errors|Fly   |Timeout|Test|"
   echo "|      |               |    |Hours|Count|Count|       |Sectors|Sectors |Errors|      |Writes|Count  |Age |"
   echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 for drive_label in ${SATA_DRIVES}; do
   # Ask smartctl to diplay the Seek_Error_Rate in raw hexadecimal so that we can extract the number of seek errors and
   # total number of seeks afterwards.
@@ -94,9 +88,9 @@ for drive_label in ${SATA_DRIVES}; do
   printf "|%-4s %1s|%-15s| %s |%5s|%5s|%5s|%7s|%7s|%8s|%6s|%6s|%6s|%7s|%4s|\n" "${drive_label}" "${ui_symbol}" \
     "${serial_number}" "${temperature}" "${power_on_hours}" "${start_stop_count}" "${spin_retry_count}" \
     "${realocated_sectors}" "${pending_sectors_count}" "${uncorrectable_sectors_count}" "${udma_crc_errors_count}" \
-    "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >> "${EMAIL_CONTENT}"
+    "${seek_errors}" "${high_fly_writes}" "${command_timeout}" "${test_age}" >> "${EMAIL_BODY}"
 done
-echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >> "${EMAIL_CONTENT}"
+echo "+------+---------------+----+-----+-----+-----+-------+-------+--------+------+------+------+-------+----+" >> "${EMAIL_BODY}"
 
 # Print a detailed SMART report for each drive.
 for drive_label in ${SATA_DRIVES}; do
@@ -111,22 +105,26 @@ for drive_label in ${SATA_DRIVES}; do
     smartctl -H -A -l error /dev/"${drive_label}"
     # Display the status of the last selftest.
     smartctl -l selftest /dev/"${drive_label}" | grep "# 1 \|Num" | cut -c6-
-  ) >> "${EMAIL_CONTENT}"
+  ) >> "${EMAIL_BODY}"
 done
 
 # Trimming unnecessary information from SMART detailed reports.
-sed -i '' -e '/smartctl 6.3/d' "${EMAIL_CONTENT}"
-sed -i '' -e '/Copyright/d' "${EMAIL_CONTENT}"
-sed -i '' -e '/=== START OF READ/d' "${EMAIL_CONTENT}"
-sed -i '' -e '/SMART Attributes Data/d' "${EMAIL_CONTENT}"
-sed -i '' -e '/Vendor Specific SMART/d' "${EMAIL_CONTENT}"
-sed -i '' -e '/SMART Error Log Version/d' "${EMAIL_CONTENT}"
+sed -i '' -e '/smartctl 6.3/d' "${EMAIL_BODY}"
+sed -i '' -e '/Copyright/d' "${EMAIL_BODY}"
+sed -i '' -e '/=== START OF READ/d' "${EMAIL_BODY}"
+sed -i '' -e '/SMART Attributes Data/d' "${EMAIL_BODY}"
+sed -i '' -e '/Vendor Specific SMART/d' "${EMAIL_BODY}"
+sed -i '' -e '/SMART Error Log Version/d' "${EMAIL_BODY}"
 
 (
   echo ""
   echo "-- End of SMART status report --"
   echo "</pre>"
-) >> "${EMAIL_CONTENT}"
+) >> "${EMAIL_BODY}"
 
-sendmail -t < "${EMAIL_CONTENT}"
+format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
+format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
+format_email_footer >> "${EMAIL_CONTENT}"
+sendmail -i -t < "${EMAIL_CONTENT}"
+rm "${EMAIL_BODY}"
 rm "${EMAIL_CONTENT}"
