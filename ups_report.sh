@@ -7,7 +7,6 @@ source format_email.sh
 
 readonly EMAIL_SUBJECT="FreeNAS $(hostname): UPS status report"
 readonly EMAIL_BODY="/tmp/ups_report.html"
-readonly EMAIL_CONTENT="/tmp/ups_report.eml"
 
 # Only specify monospace font to let Email client decide of the rest.
 echo "<pre style=\"font-family:monospace\">" > "${EMAIL_BODY}"
@@ -256,9 +255,5 @@ done
   echo "</pre>"
 ) >> "${EMAIL_BODY}"
 
-format_email_header "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" > "${EMAIL_CONTENT}"
-format_email_body "${EMAIL_BODY}" >> "${EMAIL_CONTENT}"
-format_email_footer >> "${EMAIL_CONTENT}"
-sendmail -i -t < "${EMAIL_CONTENT}"
+format_email "${EMAIL_SUBJECT}" "${EMAIL_ADDRESS}" "${EMAIL_BODY}" | sendmail -i -t
 rm "${EMAIL_BODY}"
-rm "${EMAIL_CONTENT}"
