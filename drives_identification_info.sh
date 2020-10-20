@@ -2,7 +2,12 @@
 #
 # Diplay a table containing useful drive identification information.
 
-source user.conf && source global.conf
+readonly SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+# shellcheck source=user.example.conf
+source "${SCRIPT_PATH}/user.conf"
+# shellcheck source=global.conf
+source "${SCRIPT_PATH}/global.conf"
 
 echo "+========+============================================+=================+"
 echo "| Device | GPTID                                      | Serial          |"

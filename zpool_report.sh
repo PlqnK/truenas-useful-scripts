@@ -2,8 +2,14 @@
 #
 # Send a zpool status summary and detailed report of all pools via Email.
 
-source user.conf && source global.conf
-source format_email.sh
+readonly SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+# shellcheck source=user.example.conf
+source "${SCRIPT_PATH}/user.conf"
+# shellcheck source=global.conf
+source "${SCRIPT_PATH}/global.conf"
+# shellcheck source=format_email.sh
+source "${SCRIPT_PATH}/format_email.sh"
 
 readonly EMAIL_SUBJECT="FreeNAS $(hostname): zpool status report"
 readonly EMAIL_BODY="/tmp/zpool_report.html"

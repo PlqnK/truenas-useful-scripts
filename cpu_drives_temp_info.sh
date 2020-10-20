@@ -2,7 +2,12 @@
 #
 # Display the temperature of both the CPU cores and the SATA drives.
 
-source user.conf && source global.conf
+readonly SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+# shellcheck source=user.example.conf
+source "${SCRIPT_PATH}/user.conf"
+# shellcheck source=global.conf
+source "${SCRIPT_PATH}/global.conf"
 
 for core_number in $(seq 0 "${CPU_CORE_AMOUNT}"); do
   cpu_temperature="$(sysctl -n dev.cpu."${core_number}".temperature | sed 's/\..*$//g')"

@@ -2,8 +2,14 @@
 #
 # Send a FreeNAS config backup via Email and also store it somewhere in a data pool.
 
-source user.conf && source global.conf
-source format_email.sh
+readonly SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+# shellcheck source=user.example.conf
+source "${SCRIPT_PATH}/user.conf"
+# shellcheck source=global.conf
+source "${SCRIPT_PATH}/global.conf"
+# shellcheck source=format_email.sh
+source "${SCRIPT_PATH}/format_email.sh"
 
 readonly EMAIL_SUBJECT="FreeNAS $(hostname): Config backup"
 readonly EMAIL_BODY="/tmp/config_backup.html"
