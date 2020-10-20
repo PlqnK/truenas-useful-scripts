@@ -34,6 +34,9 @@ if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; the
   # Also store it somewhere that will be backed up by another service.
   if [[ "${BACKUP_FILE_PATH}" != "" ]]; then
     cp "${TAR_FILE}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
+    if [[ "${BACKUP_FILE_OWNER}" != "" ]]; then
+      chown "${BACKUP_FILE_OWNER}" "${BACKUP_FILE_PATH}"/"${BACKUP_FILE_NAME}".tar.gz
+    fi
   fi
   rm /tmp/"${BACKUP_FILE_NAME}".db
   rm /tmp/"${BACKUP_FILE_NAME}".db.sha256
