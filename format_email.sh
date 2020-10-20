@@ -19,7 +19,7 @@ format_email () {
   echo "Content-Type: text/html; charset=\"UTF-8\""
   echo "Content-Transfer-Encoding: quoted-printable"
   echo ""
-  cat "${3}" | perl -pe 'use MIME::QuotedPrint; $_=MIME::QuotedPrint::encode($_);'
+  perl -pe 'use MIME::QuotedPrint; $_=MIME::QuotedPrint::encode($_);' < "${3}"
   echo ""
   if [[ -n "${4}" ]]; then
     echo "--${email_boundary}"
@@ -27,7 +27,7 @@ format_email () {
     echo "Content-Disposition: attachment; filename=\"$(basename ${4})\""
     echo "Content-Transfer-Encoding: base64"
     echo ""
-    cat "${4}" | base64
+    base64 -e "${4}"
   fi
   echo "--${email_boundary}--"
 }
