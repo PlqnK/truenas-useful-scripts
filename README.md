@@ -37,10 +37,8 @@ find . -type f -name "*.sh" -exec chmod +x {} \;
 Finally you will need to create cron jobs in the FreeNAS WebUI in order to execute the reporting and backup script on a schedule. [The FreeNAS documentation explains how to do it.](https://www.ixsystems.com/documentation/freenas/11.2/tasks.html#cron-jobs) The command to execute should be:
 
 ```sh
-cd /path/to/the/script && ./script.sh
+/path/to/the/script.sh
 ```
-
-Otherwise the sourcing of the `.conf` files that happens at the beginning of each script will fail.
 
 ## Contributing
 
