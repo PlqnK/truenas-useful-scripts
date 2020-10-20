@@ -8,7 +8,7 @@
 
 # Usage: format_email "Subject" "address@example.com" /path/to/body.html [/path/to/attachment.ext] | sendmail -i -t
 format_email () {
-  email_boundary=$(LC_CTYPE=C tr -dc '0-9' < /dev/urandom | head -c 24)
+  email_boundary=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 32)
 
   echo "MIME-Version: 1.0"
   echo "Subject: ${1}"
