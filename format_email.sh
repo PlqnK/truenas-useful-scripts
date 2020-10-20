@@ -23,8 +23,8 @@ format_email () {
   echo ""
   if [[ -n "${4}" ]]; then
     echo "--${email_boundary}"
-    echo "Content-Type: text/plain; charset=\"US-ASCII\"; name=\"$(basename ${4})\""
-    echo "Content-Disposition: attachment; filename=\"$(basename ${4})\""
+    echo "Content-Type: text/plain; charset=\"US-ASCII\"; name=\"$(basename "${4}")\""
+    echo "Content-Disposition: attachment; filename=\"$(basename "${4}")\""
     echo "Content-Transfer-Encoding: base64"
     echo ""
     base64 -e "${4}"
