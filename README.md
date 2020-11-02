@@ -1,12 +1,12 @@
-# FreeNAS Useful Scripts
+# TrueNAS Useful Scripts
 
 ## Disclaimer
 
-These scripts are based on [FreeNAS forums user Bidule0hm scripts](https://forums.freenas.org/index.php?threads/scripts-to-report-smart-zpool-and-ups-status-hdd-cpu-t%C2%B0-hdd-identification-and-backup-the-config.27365/) which are themselves based on [FreeNAS forums user joeschmuck scripts](https://forums.freenas.org/index.php?threads/set-up-smart-reporting-via-email.6211/) and [FreeNAS forums user titan_rw scripts](https://forums.freenas.org/index.php?threads/set-up-smart-reporting-via-email.6211/). Though I still did a lot of work, like rewriting large parts of them and doing some overall code cleaning.
+These scripts are based on [TrueNAS forums user Bidule0hm scripts](https://www.truenas.com/community/threads/scripts-to-report-smart-zpool-and-ups-status-hdd-cpu-t%C2%B0-hdd-identification-and-backup-the-config.27365/) which are themselves based on [TrueNAS forums user joeschmuck scripts](https://www.truenas.com/community/threads/set-up-smart-reporting-via-email.6211/) and [TrueNAS forums user titan_rw scripts](https://www.truenas.com/community/threads/set-up-smart-reporting-via-email.6211/). Though I still did a lot of work, like rewriting large parts of them and doing some overall code cleaning.
 
 ## About the project
 
-This is a collection of useful scripts for FreeNAS admins that want to have more reporting than just what's included in the OS, display useful information like HDD and CPU temperature easily in a terminal and scripting the backup of the FreeNAS config.
+This is a collection of useful scripts for TrueNAS admins that want to have more reporting than just what's included in the OS, display useful information like HDD and CPU temperature easily in a terminal and scripting the backup of the TrueNAS config.
 
 ## Roadmap
 
@@ -16,13 +16,13 @@ This is a collection of useful scripts for FreeNAS admins that want to have more
 
 ## Prerequisites
 
-- FreeNAS (tested with version 11.2+)
+- TrueNAS 12.0+ (for FreeNAS 11.3 see the `v1.0` git tag)
 
 ## Installation
 
 ```bash
-git clone https://github.com/PlqnK/freenas-useful-scripts.git
-cd freenas-useful-scripts
+git clone https://github.com/PlqnK/truenas-useful-scripts.git
+cd truenas-useful-scripts
 for file in *.example*; do cp $file $(echo $file | sed -e 's/.example//'); done
 ```
 
@@ -34,7 +34,7 @@ Next, set the scripts as executable:
 find . -type f -name "*.sh" -exec chmod +x {} \;
 ```
 
-Finally you will need to create cron jobs in the FreeNAS WebUI in order to execute the reporting and backup script on a schedule. [The FreeNAS documentation explains how to do it.](https://www.ixsystems.com/documentation/freenas/11.2/tasks.html#cron-jobs) The command to execute should be:
+Finally you will need to create cron jobs in the TrueNAS WebUI in order to execute the reporting and backup script on a schedule. [The TrueNAS documentation explains how to do it.](https://www.truenas.com/docs/hub/tasks/scheduled/cron-jobs/) The command to execute should be:
 
 ```sh
 /path/to/the/script.sh

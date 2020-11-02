@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Send a FreeNAS config backup via Email and also store it somewhere in a data pool.
+# Send a TrueNAS config backup via Email and also store it somewhere in a data pool.
 
 readonly SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
@@ -11,7 +11,7 @@ source "${SCRIPT_PATH}/global.conf"
 # shellcheck source=format_email.sh
 source "${SCRIPT_PATH}/format_email.sh"
 
-readonly EMAIL_SUBJECT="FreeNAS $(hostname): Config backup"
+readonly EMAIL_SUBJECT="TrueNAS $(hostname): Config backup"
 readonly EMAIL_BODY="/tmp/config_backup.html"
 readonly TAR_FILE="/tmp/${BACKUP_FILE_NAME}.tar.gz"
 
@@ -22,7 +22,7 @@ if [[ "$(sqlite3 /data/freenas-v1.db "pragma integrity_check;")" == "ok" ]]; the
   (
     # Only specify monospace font to let Email client decide of the rest.
     echo "<pre style=\"font-family:monospace\">"
-    echo "<b>Automatic backup of FreeNAS config succeded!</b>"
+    echo "<b>Automatic backup of TrueNAS config succeded!</b>"
     echo ""
     echo "You will find a compressed archive attached."
     echo ""
@@ -45,7 +45,7 @@ else # Send error message via Email.
   (
     # Only specify monospace font to let Email client decide of the rest.
     echo "<pre style=\"font-family:monospace\">"
-    echo "<b>/!\ Automatic backup of FreeNAS config failed /!\</b>"
+    echo "<b>/!\ Automatic backup of TrueNAS config failed /!\</b>"
     echo ""
     echo "The config file is corrupted, you should correct this problem as soon as possible."
     echo ""
