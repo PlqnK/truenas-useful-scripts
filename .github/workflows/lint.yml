@@ -19,6 +19,8 @@ jobs:
       uses: 'azohra/shell-linter@master'
       with:
         path: '*.sh'
+      env:
+        SHELLCHECK_OPTS: '-x'
   markdown-lint:
     name: 'Markdown Lint'
     runs-on: 'ubuntu-latest'
