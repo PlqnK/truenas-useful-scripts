@@ -94,7 +94,7 @@ for pool_name in ${ZFS_POOLS}; do
     [[ "${write_errors}" != "0" ]] ||
     [[ "${checksum_errors}" != "0" ]] ||
     [[ "${pool_used_capacity}" -ge "${ZFS_POOL_CAPACITY_WARNING}" ]] ||
-    [[ "${scrub_repaired_bytes}" != "0" ]] ||
+    [[ "${scrub_repaired_bytes}" != "0B" ]] ||
     [[ "$(echo "${scrub_age}" | awk '{print int($1)}')" -ge "${SCRUB_AGE_WARNING}" ]]; then
     ui_symbol="${UI_WARNING_SYMBOL}"
   else
