@@ -11,7 +11,7 @@ source "${SCRIPT_PATH}/global.conf"
 # shellcheck source=format_email.sh
 source "${SCRIPT_PATH}/format_email.sh"
 
-readonly EMAIL_SUBJECT="FreeNAS $(hostname): UPS status report"
+readonly EMAIL_SUBJECT="TrueNAS $(hostname): UPS status report"
 readonly EMAIL_BODY="/tmp/ups_report.html"
 
 # Only specify monospace font to let Email client decide of the rest.

@@ -11,7 +11,7 @@ source "${SCRIPT_PATH}/global.conf"
 # shellcheck source=format_email.sh
 source "${SCRIPT_PATH}/format_email.sh"
 
-readonly EMAIL_SUBJECT="FreeNAS $(hostname): zpool status report"
+readonly EMAIL_SUBJECT="TrueNAS $(hostname): zpool status report"
 readonly EMAIL_BODY="/tmp/zpool_report.html"
 
 # Only specify monospace font to let Email client decide of the rest.
@@ -77,8 +77,8 @@ for pool_name in ${ZFS_POOLS}; do
   scrub_age="N/A"
   if [[ "$(echo "${pool_status}" | grep "scan" | awk '{print $2}')" == "scrub" ]]; then
     scrub_repaired_bytes="$(echo "${pool_status}" | grep "scan" | awk '{print $4}')"
-    scrub_errors="$(echo "${pool_status}" | grep "scan" | awk '{print $10}')"
-    scrub_date="$(echo "${pool_status}" | grep "scan" | awk '{print $17"-"$14"-"$15"_"$16}')"
+    scrub_errors="$(echo "${pool_status}" | grep "scan" | awk '{print $8}')"
+    scrub_date="$(echo "${pool_status}" | grep "scan" | awk '{print $15"-"$12"-"$13"_"$14}')"
     scrub_timestamp="$(date -j -f "%Y-%b-%e_%H:%M:%S" "${scrub_date}" "+%s")"
     current_timestamp="$(date "+%s")"
     scrub_age=$((((current_timestamp - scrub_timestamp) + 43200) / 86400))
@@ -94,7 +94,7 @@ for pool_name in ${ZFS_POOLS}; do
     [[ "${write_errors}" != "0" ]] ||
     [[ "${checksum_errors}" != "0" ]] ||
     [[ "${pool_used_capacity}" -ge "${ZFS_POOL_CAPACITY_WARNING}" ]] ||
-    [[ "${scrub_repaired_bytes}" != "0" ]] ||
+    [[ "${scrub_repaired_bytes}" != "0B" ]] ||
     [[ "$(echo "${scrub_age}" | awk '{print int($1)}')" -ge "${SCRUB_AGE_WARNING}" ]]; then
     ui_symbol="${UI_WARNING_SYMBOL}"
   else

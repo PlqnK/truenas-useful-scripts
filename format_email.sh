@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Bash functions to format an email to be sent by the FreeNAS 'sendmail' program.
-# FreeNAS 'sendmail' uses a "custom" mail sending program, written in Python by the FreeNAS team.
+# Bash functions to format an email to be sent by the TrueNAS 'sendmail' program.
+# TrueNAS 'sendmail' uses a "custom" mail sending program, written in Python by the TrueNAS team.
 # I can't make this program work with the Content-Type 'multipart/alternative'.
 # And you are required to use the Content-Type: multipart/mixed, even when you have no attachment because the program
 # will overwrite your other Content-Type/Transfer-Encoding if it's not set.
