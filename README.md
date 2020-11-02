@@ -16,7 +16,9 @@ This is a collection of useful scripts for TrueNAS admins that want to have more
 
 ## Prerequisites
 
-- TrueNAS 12.0+ (for FreeNAS 11.3 see the `v1.0` git tag)
+- TrueNAS 12.0+
+
+> For FreeNAS 11.3 support see the `v1.0.0` release/tag
 
 ## Installation
 
