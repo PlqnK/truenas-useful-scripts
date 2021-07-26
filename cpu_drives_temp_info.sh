@@ -30,7 +30,10 @@ for drive_label in ${SATA_DRIVES}; do
     if [[ -z "${drive_temperature}" ]]; then
       drive_temperature="$(echo "${drive_information_attributes}" | grep "Current Drive Temperature" | awk '{print $4}')" # SAS HDD
       if [[ -z "${drive_temperature}" ]]; then
-        drive_temperature="N/A" # Some drives don't report their temperature
+        drive_temperature="$(echo "${drive_information_attributes}" | grep "Temperature_Case" | awk '{print $10}')" # SATA HDD
+        if [[ -z "${drive_temperature}" ]]; then
+          drive_temperature="N/A" # Some drives don't report their temperature
+        fi
       fi
     fi
   fi
