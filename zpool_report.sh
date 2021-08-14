@@ -17,14 +17,25 @@ readonly EMAIL_BODY="/tmp/zpool_report.html"
 # Only specify monospace font to let Email client decide of the rest.
 echo "<pre style=\"font-family:monospace\">" > "${EMAIL_BODY}"
 
+if [ "$LONGPOOLNAMES" = true ]
+then
+  DASHES="----------"
+  SPACES="          "
+  JUSTIFY=22
+else
+  DASHES=""
+  SPACES=""
+  JUSTIFY=12
+fi
+
 # Print a summary table of the status of all pools.
 (
   echo "<b>ZPool status report summary for all pools:</b>"
-  echo "+--------------+--------+------+------+------+----+--------+------+-----+"
-  echo "|Pool Name     |Status  |Read  |Write |Cksum |Used|Scrub   |Scrub |Last |"
-  echo "|              |        |Errors|Errors|Errors|    |Repaired|Errors|Scrub|"
-  echo "|              |        |      |      |      |    |Bytes   |      |Age  |"
-  echo "+--------------+--------+------+------+------+----+--------+------+-----+"
+  echo "+--------------${DASHES}+--------+------+------+------+----+--------+------+-----+"
+  echo "|Pool Name     ${SPACES}|Status  |Read  |Write |Cksum |Used|Scrub   |Scrub |Last |"
+  echo "|              ${SPACES}|        |Errors|Errors|Errors|    |Repaired|Errors|Scrub|"
+  echo "|              ${SPACES}|        |      |      |      |    |Bytes   |      |Age  |"
+  echo "+--------------${DASHES}+--------+------+------+------+----+--------+------+-----+"
 ) >> "${EMAIL_BODY}"
 for pool_name in ${ZFS_POOLS}; do
   pool_health="$(zpool list -H -o health "${pool_name}")"
@@ -102,11 +113,11 @@ for pool_name in ${ZFS_POOLS}; do
   fi
 
   # Print the row with all the attributes corresponding to the pool.
-  printf "|%-12s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
+  printf "|%-${JUSTIFY}s %1s|%-8s|%6s|%6s|%6s|%3s%%|%8s|%6s|%5s|\n" "${pool_name}" "${ui_symbol}" "${pool_health}" \
     "${read_errors}" "${write_errors}" "${checksum_errors}" "${pool_used_capacity}" "${scrub_repaired_bytes}" "${scrub_errors}" \
     "${scrub_age}" >> "${EMAIL_BODY}"
 done
-echo "+--------------+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_BODY}"
+echo "+--------------${DASHES}+--------+------+------+------+----+--------+------+-----+" >> "${EMAIL_BODY}"
 
 # Print a detailed status report for each pool.
 for pool_name in ${ZFS_POOLS}; do
