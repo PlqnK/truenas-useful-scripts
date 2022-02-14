@@ -104,7 +104,7 @@ for drive_label in ${SATA_DRIVES}; do
   serial_number="$(echo "${drive_smart_info}" | grep "Serial Number" | awk '{print $3}')"
   (
     echo ""
-    echo ""
+    echo "<hr>"
     echo "<b>SMART status report for ${drive_label} drive (${brand}: ${serial_number}):</b>"
     # Dislpay the SMART status table.
     smartctl -H -A -l error /dev/"${drive_label}"
